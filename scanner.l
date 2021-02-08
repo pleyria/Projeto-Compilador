@@ -1,53 +1,44 @@
+/* Codgio Flex para o analisador lexico */
+
 %{
-#include "token.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "parser.tab.h"
+
+extern FILE* yyin;
+extern FILE* yyout;
+
+int lineno = 1;
+
+void print_token(char* token_type);
+//void yyerror();
+
 %}
 
-LETRA	[a-zA-Z]
-DIGITO	[0-9]
+digit       [0-9]
+letter      [a-zA-Z]
+newline     \n
+whitespace  [ \t]+
 
 %%
 
-"else"		{printf("Palavra-chave: else\n");}
-"if"		{printf("Palavra-chave: if\n");}
-"int"		{printf("Palavra-chave: int\n");}
-"return"	{printf("palavra-chave: return\n");}
-"void"		{printf("palavra-chave: void\n");}
-"while"		{printf("palavra-chave: while\n");}
+"else"			{print_token("palavra-chave else"); return ELSE;}
+"if"			{print_token("palavra-chave if"); return IF;}
+"int"			{print_token("palavra-chave int"); return INT;}
+"return"		{print_token("palavra-chave return"); return RETURN;}
+"void"			{print_token("palavra-chave void"); return VOID;}
+"while"			{print_token("palavra-chave while"); return WHILE;}
 
-"+"		{printf("Simbolo especial: +\n");}
-"-"		{printf("Simbolo especial: -\n");}
-"*"		{printf("Simbolo especial: *\n");}
-"/"		{printf("Simbolo especial: /\n");}
-"<"		{printf("Simbolo especial: <\n");}
-"<="		{printf("Simbolo especial: <=\n");}
-">"		{printf("Simbolo especial: >\n");}
-">="		{printf("Simbolo especial: >=\n");}
-"=="		{printf("Simbolo especial: ==\n");}
-"!="		{printf("Simbolo especial: !=\n");}
-"="		{printf("Simbolo especial: =\n");}
-";"		{printf("Simbolo especial: ;\n");}
-","		{printf("Simbolo especial: ,\n");}
-"("		{printf("Simbolo especial: (\n");}
-")"		{printf("Simbolo especial: )\n");}
-"["		{printf("Simbolo especial: [\n");}
-"]"		{printf("Simbolo especial: ]\n");}
-"{"		{printf("Simbolo especial: {\n");}
-"}"		{printf("Simbolo especial: }\n");}
-"/*"		{printf("Simbolo especial: /*\n");}
-"*/"		{printf("Simbolo especial: */\n");}
-{LETRA}+	{printf("ID: %s\n", yytext);}
-{DIGITO}+	{printf("NUM: %s\n", yytext);}
+{newline}		{lineno ++;}
+{whitespace}    {}
+
+.				{return OUTRO;}
+
 %%
 
-int main(int argc, char *argv[]){
-	FILE *f_in;
-
-	if (argc == 2){
-		if(f_in = fopen(argv[1], "r")) yyin = f_in;
-		else perror(argv[0]);
-	}
-	else yyin = stdin;
-
-	yylex();
-	return 0;
+void print_token(char* token_type){
+	printf("token: %s\n valor: %s\n linha: %d\n", token_type, yytext, lineno);
 }
