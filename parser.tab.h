@@ -55,7 +55,30 @@ extern int yydebug;
     RETURN = 261,
     VOID = 262,
     WHILE = 263,
-    OUTRO = 264
+    OUTRO = 264,
+    MAIS = 265,
+    MENOS = 266,
+    ASTERISCO = 267,
+    BARRA = 268,
+    MENOR = 269,
+    MENORIGUAL = 270,
+    MAIOR = 271,
+    MAIORIGUAL = 272,
+    IGUALIGUAL = 273,
+    DIFERENTE = 274,
+    IGUAL = 275,
+    PONTOVIRGULA = 276,
+    VIRGULA = 277,
+    ABREPAR = 278,
+    FECHAPAR = 279,
+    ABRECOL = 280,
+    FECHACOL = 281,
+    ABRECHA = 282,
+    FECHACHA = 283,
+    ABRECOM = 284,
+    FECHACOM = 285,
+    ID = 286,
+    NUM = 287
   };
 #endif
 

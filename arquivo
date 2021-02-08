@@ -1,1 +1,3 @@
-int if else
+void main (void) {
+	int x; int y;
+}
