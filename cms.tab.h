@@ -1,9 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,11 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
-
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_CMS_TAB_H_INCLUDED
+# define YY_YY_CMS_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -49,36 +45,35 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ELSE = 258,
-    IF = 259,
-    INT = 260,
-    RETURN = 261,
+    IF = 258,
+    ELSE = 259,
+    WHILE = 260,
+    INT = 261,
     VOID = 262,
-    WHILE = 263,
-    OUTRO = 264,
-    MAIS = 265,
-    MENOS = 266,
-    ASTERISCO = 267,
-    BARRA = 268,
-    MENOR = 269,
-    MENORIGUAL = 270,
-    MAIOR = 271,
-    MAIORIGUAL = 272,
-    IGUALIGUAL = 273,
-    DIFERENTE = 274,
-    IGUAL = 275,
-    PONTOVIRGULA = 276,
-    VIRGULA = 277,
-    ABREPAR = 278,
-    FECHAPAR = 279,
-    ABRECOL = 280,
-    FECHACOL = 281,
-    ABRECHA = 282,
-    FECHACHA = 283,
-    ABRECOM = 284,
-    FECHACOM = 285,
-    ID = 286,
-    NUM = 287
+    RETURN = 263,
+    NUM = 264,
+    ID = 265,
+    ASSIGN = 266,
+    EQ = 267,
+    NE = 268,
+    LT = 269,
+    LTE = 270,
+    GT = 271,
+    GTE = 272,
+    PLUS = 273,
+    MINUS = 274,
+    TIMES = 275,
+    OVER = 276,
+    LPAREN = 277,
+    RPAREN = 278,
+    LBRACKET = 279,
+    RBRACKET = 280,
+    LKEYS = 281,
+    RKEYS = 282,
+    COMMA = 283,
+    SEMI = 284,
+    ERROR = 285,
+    ENDFILE = 286
   };
 #endif
 
@@ -94,4 +89,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_CMS_TAB_H_INCLUDED  */
