@@ -1,9 +1,3 @@
-/****************************************************/
-/* Thauany Moedano                                  */
-/*                                                  */
-/* Arquivo: analyze.c                               */
-/****************************************************/
-
 #include "globals.h"
 #include "symtab.h"
 #include "analyze.h"

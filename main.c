@@ -1,10 +1,3 @@
-/****************************************************/
-/* File: main.c                                     */
-/* Main program for TINY compiler                   */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 
 /* set NO_PARSE to TRUE to get a scanner-only compiler */

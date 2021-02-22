@@ -1,3 +1,12 @@
+# Compilador da linguagem C-
+inclui implementações:
+* Analisador léxico
+* Analisador semântico
+* Árvore de análise sintática
+* Tabela de símbolos
+* Analisador semântico
+
+
 No prompt:
 
  flex cms.l
