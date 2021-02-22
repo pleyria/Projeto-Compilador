@@ -8,7 +8,7 @@
 /* set NO_CODE to TRUE to get a compiler that does not
  * generate code
  */
-#define NO_CODE TRUE
+#define NO_CODE FALSE
 
 #include "util.h"
 #if NO_PARSE
@@ -18,7 +18,7 @@
 #if !NO_ANALYZE
 #include "analyze.h"
 #if !NO_CODE
-//#include "cgen.h"
+#include "cgen.h"
 #endif
 #endif
 #endif

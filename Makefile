@@ -1,4 +1,4 @@
 default:
-	bison -d parser.y
-	flex scanner.l
-	gcc -o compilador parser.tab.c lex.yy.c -lfl
+	flex cms.l
+	bison -d cms.y
+	gcc -g *.c -o cms
