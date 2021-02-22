@@ -73,18 +73,8 @@ main( int argc, char * argv[] )
   }
 #if !NO_CODE
   if (! Error)
-  { char * codefile;
-    int fnlen = strcspn(pgm,".");
-    codefile = (char *) calloc(fnlen+4, sizeof(char));
-    strncpy(codefile,pgm,fnlen);
-    strcat(codefile,".tm");
-    code = fopen(codefile,"w");
-    if (code == NULL)
-    { printf("Unable to open %s\n",codefile);
-      exit(1);
-    }
-    codeGen(syntaxTree,codefile);
-    fclose(code);
+  { 
+    codeGen(syntaxTree);
   }
 #endif
 #endif

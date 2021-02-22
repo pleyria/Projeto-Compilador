@@ -14,6 +14,9 @@
  * of the code file, and is used to print the
  * file name as a comment in the code file
  */
-void codeGen(TreeNode * syntaxTree, char * codefile);
+
+void genStmt(TreeNode * tree, int temp);
+void genExp(TreeNode * tree, int temp);
+void codeGen(TreeNode * syntaxTree);
 
 #endif
