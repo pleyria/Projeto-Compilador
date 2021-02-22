@@ -16,4 +16,4 @@ No prompt:
 
 Executável gerado é c-
 
-Executar: ./cms
+Executar: ./cms <arquivoFonte>
