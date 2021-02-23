@@ -3,7 +3,7 @@
 #include "analyze.h"
 
 static void typeError(TreeNode * t, char * message)
-{ fprintf(listing,"Type error in %s at line %d: %s\n",t->attr.name, t->lineno,message);
+{ fprintf(listing,"Erro de tipo em %s na linha %d: %s\n",t->attr.name, t->lineno,message);
   Error = TRUE;
 }
 
@@ -60,26 +60,26 @@ static void insertNode( TreeNode * t)
         { 		
 			case variableK:
           		if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "variable", "integer");
+            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "variavel", "inteiro");
           		else
-            		typeError(t,"Error 4: Invalid Declaration. Already declared.");	
+            		typeError(t,"Erro 4: Declaracao invalida. Ja declarado.");	
             break;
 			case functionK:
 				if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
 				{
 					if(t->type == integerK)
-                        st_insert(t->attr.name,t->lineno,location++, t->attr.scope,"function", "integer");
+                        st_insert(t->attr.name,t->lineno,location++, t->attr.scope,"funcao", "inteiro");
             		else
-                        st_insert(t->attr.name,t->lineno,location++, t->attr.scope,"function", "void");
+                        st_insert(t->attr.name,t->lineno,location++, t->attr.scope,"funcao", "void");
             	}
           		else
-            		typeError(t,"Error 4: Invalid Declaration. Already declared.");	
+            		typeError(t,"Erro 4: Declaracao invalida. Ja declarado.");	
 			break;
 			case callK:
 				if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-            		typeError(t,"Error 5: Invalid Call. It was not declared.");	
+            		typeError(t,"Erro 5: Chamada invalida. Nao foi declarada.");	
           		else
-            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "call", "-");
+            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "chamada", "-");
 			case returnK:
           	break;
         	default:
@@ -91,21 +91,21 @@ static void insertNode( TreeNode * t)
       { 
 		  case idK:
 			if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-				 typeError(t,"Error 1: it was not declared");
+				 typeError(t,"Erro 1: Nao foi declarada");
 			else
-            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "variable", "integer");	
+            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "variavel", "inteiro");	
 	      break;
 	      case vectorK:
 	      	if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-				 typeError(t,"Error 1: it was not declared");
+				 typeError(t,"Error 1: Nao foi declarada");
 			else
-            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "vector", "integer");	
+            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "vetor", "inteiro");	
 		  break;
 		  case vectorIdK:
 		  	if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-				 typeError(t,"Error 1: it was not declared");
+				 typeError(t,"Error 1: Nao foi declarada");
 			else
-            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "vector index", "integer");	
+            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "indice de vetor", "inteiro");	
 		  case typeK:
           break;
         default:
@@ -123,13 +123,13 @@ void buildSymtab(TreeNode * syntaxTree)
   traverse(syntaxTree,insertNode,nullProc); 
   if(st_lookup("main", "global") == -1)
    {
-   		printf("main was not declared");
+   		printf("main nao foi declarada");
    		Error = TRUE; 
    }
 	
   if (TraceAnalyze)
   { 
-    fprintf(listing,"\nSymbol table:\n\n");
+    fprintf(listing,"\nTabela de Simbolos:\n\n");
     printSymTab(listing);
   }
 }
@@ -151,15 +151,15 @@ static void checkNode(TreeNode * t)
       { 
         case ifK:
           if (t->child[0]->type == integerK && t->child[1]->type == integerK)
-           typeError(t->child[0],"if test is not Boolean");
+           typeError(t->child[0],"teste do if nao e booleano");
         break;
         case assignK:
           if (t->child[0]->type == voidK || t->child[1]->type == voidK)
-            typeError(t->child[0],"assignment of non-integer value");
+            typeError(t->child[0],"atribuicao de valor nao-inteiro");
 		  else if(t->child[1]->kind.stmt == callK)
 		  {
 		    if(strcmp(st_lookup_type(t->child[1]->attr.name, t->child[1]->attr.scope), "void"))
-				typeError(t->child[1],"assignment of void return");
+				typeError(t->child[1],"atribuicao de return void");
 			}
         break;
         default:

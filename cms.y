@@ -53,7 +53,7 @@ var_declaration     :   INT ident SEMI
                         {	
                         	$$ = newExpNode(typeK);
                             $$->type = integerK;
-                            $$->attr.name = "integer";
+                            $$->attr.name = "inteiro";
                             $$->child[0] = $2;
                             $2->nodekind = statementK;
                             $2->kind.stmt = variableK;
@@ -63,7 +63,7 @@ var_declaration     :   INT ident SEMI
                         {
                         	$$ = newExpNode(typeK);
                             $$->type = integerK;
-                            $$->attr.name = "integer";
+                            $$->attr.name = "inteiro";
                             $$->child[0] = $2;
                             $2->nodekind = statementK;
                             $2->kind.stmt = variableK;
@@ -75,7 +75,7 @@ fun_declaration     :   INT ident LPAREN params RPAREN compound_decl
                         {
                         	$$ = newExpNode(typeK);
                             $$->type = integerK;
-                            $$->attr.name = "integer";
+                            $$->attr.name = "inteiro";
                             $$->child[0] = $2;
                             $2->child[0] = $4;
                             $2->child[1] = $6;
@@ -136,7 +136,7 @@ param               :   INT ident
                            $2->kind.stmt = variableK;
                            $$->type = integerK;
 						   $2->type = integerK; 	
-                           $$->attr.name = "integer";
+                           $$->attr.name = "inteiro";
                            $$->child[0] = $2;
                         }
                     |   INT ident LBRACKET RBRACKET
@@ -146,7 +146,7 @@ param               :   INT ident
 							$2->nodekind = statementK;
                             $2->kind.stmt = variableK;
                             $$->type = integerK;
-                            $$->attr.name = "integer";
+                            $$->attr.name = "inteiro";
                             $$->child[0] = $2;
 						    $2->type = integerK;
                         }

@@ -247,6 +247,6 @@ static void cGen( TreeNode * tree)
  */
 void codeGen(TreeNode * syntaxTree)
 {  
-   printf("\nThree address code:\n");
+   printf("\nCodigo de tres enderecos:\n");
    cGen(syntaxTree);
 }

@@ -107,8 +107,8 @@ char* st_lookup_type (char* name, char* scope)
 
 void printSymTab(FILE * listing)
 { int i;
-  fprintf(listing,"Location        Name       Scope       TypeID       TypeData    Line Numbers\n");
-  fprintf(listing,"-------------  --------   ------------ ------------ ------------ ------------\n");
+  fprintf(listing,"Localizacao     Nome       Escopo       TipoID       TipoData    Numero Linhas\n");
+  fprintf(listing,"-------------  --------   ------------ ------------ ------------ -------------\n");
   for (i=0;i<SIZE;++i)
   { if (hashTable[i] != NULL)
     { BucketList l = hashTable[i];

@@ -1,8 +1,14 @@
 void main(void){
 	int x;
-	int v[10];
-	int u[5];
-	x = v[2];
+	int y;
+	
+	x = 5;
+	
+	if (x > 10)
+		y = 100;
+	else
+		y = 200;
+		
+	return y;
 }
-
 

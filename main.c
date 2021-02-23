@@ -54,22 +54,22 @@ main( int argc, char * argv[] )
     exit(1);
   }
   listing = stdout; /* send listing to screen */
-  fprintf(listing,"\nC MINUS COMPILATION: %s\n",pgm);
+  fprintf(listing,"\nCompilacao em C menos: %s\n",pgm);
 #if NO_PARSE
   while (getToken()!=ENDFILE);
 #else
   syntaxTree = parse();
   if (TraceParse) {
-    fprintf(listing,"\nSyntax tree:\n");
+    fprintf(listing,"\nArvore sintatica:\n");
     printTree(syntaxTree);
   }
 #if !NO_ANALYZE
   if (! Error)
-  { if (TraceAnalyze) fprintf(listing,"\nBuilding Symbol Table...\n");
+  { if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
     buildSymtab(syntaxTree);
-    if (TraceAnalyze) fprintf(listing,"\nChecking Types...\n");
+    if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
     typeCheck(syntaxTree);
-    if (TraceAnalyze) fprintf(listing,"\nType Checking Finished\n");
+    if (TraceAnalyze) fprintf(listing,"\nChecagem de Tipos Finalizada\n");
   }
 #if !NO_CODE
   if (! Error)

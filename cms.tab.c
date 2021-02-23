@@ -1466,7 +1466,7 @@ yyreduce:
                         {	
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
-                            yyval->attr.name = "integer";
+                            yyval->attr.name = "inteiro";
                             yyval->child[0] = yyvsp[-1];
                             yyvsp[-1]->nodekind = statementK;
                             yyvsp[-1]->kind.stmt = variableK;
@@ -1480,7 +1480,7 @@ yyreduce:
                         {
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
-                            yyval->attr.name = "integer";
+                            yyval->attr.name = "inteiro";
                             yyval->child[0] = yyvsp[-4];
                             yyvsp[-4]->nodekind = statementK;
                             yyvsp[-4]->kind.stmt = variableK;
@@ -1495,7 +1495,7 @@ yyreduce:
                         {
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
-                            yyval->attr.name = "integer";
+                            yyval->attr.name = "inteiro";
                             yyval->child[0] = yyvsp[-4];
                             yyvsp[-4]->child[0] = yyvsp[-2];
                             yyvsp[-4]->child[1] = yyvsp[0];
@@ -1577,7 +1577,7 @@ yyreduce:
                            yyvsp[0]->kind.stmt = variableK;
                            yyval->type = integerK;
 						   yyvsp[0]->type = integerK; 	
-                           yyval->attr.name = "integer";
+                           yyval->attr.name = "inteiro";
                            yyval->child[0] = yyvsp[0];
                         }
 #line 1584 "cms.tab.c"
@@ -1591,7 +1591,7 @@ yyreduce:
 							yyvsp[-2]->nodekind = statementK;
                             yyvsp[-2]->kind.stmt = variableK;
                             yyval->type = integerK;
-                            yyval->attr.name = "integer";
+                            yyval->attr.name = "inteiro";
                             yyval->child[0] = yyvsp[-2];
 						    yyvsp[-2]->type = integerK;
                         }
