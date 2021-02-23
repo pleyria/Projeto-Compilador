@@ -1,4 +1,8 @@
 void main(void){
 	int x;
-	x = 1 + 4 + 2;
+	int v[10];
+	int u[5];
+	x = v[2];
 }
+
+
