@@ -1,14 +1,15 @@
-void main(void){
-	int x;
-	int y;
-	
-	x = 5;
-	
-	if (x > 10)
-		y = 100;
-	else
-		y = 200;
-		
-	return y;
+int soma(int a, int b){
+	int s;
+	s = a + b;
+	return s;
 }
 
+int num(int a){
+	return a;
+}
+
+void main(void){
+	int x;
+	
+	num(9);
+}

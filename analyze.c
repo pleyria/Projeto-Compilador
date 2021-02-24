@@ -80,6 +80,7 @@ static void insertNode( TreeNode * t)
             		typeError(t,"Erro 5: Chamada invalida. Nao foi declarada.");	
           		else
             		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "chamada", "-");
+
 			case returnK:
           	break;
         	default:
@@ -157,8 +158,8 @@ static void checkNode(TreeNode * t)
           if (t->child[0]->type == voidK || t->child[1]->type == voidK)
             typeError(t->child[0],"atribuicao de valor nao-inteiro");
 		  else if(t->child[1]->kind.stmt == callK)
-		  {
-		    if(strcmp(st_lookup_type(t->child[1]->attr.name, t->child[1]->attr.scope), "void"))
+		  { 
+		    if(strcmp(st_lookup_type(t->child[1]->attr.name, "global"), "void") == 0)
 				typeError(t->child[1],"atribuicao de return void");
 			}
         break;

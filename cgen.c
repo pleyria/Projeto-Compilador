@@ -25,8 +25,10 @@ void genStmt (TreeNode * tree, int temp){
   TreeNode * param;
   switch(tree->kind.stmt){
     case (assignK):
-      genExp(tree->child[1], temp);
-
+      if (tree->child[1]->nodekind == statementK)
+        genStmt(tree->child[1], temp);
+      else
+        genExp(tree->child[1], temp);
       printf("\t%s = t%d\n", tree->child[0]->attr.name, temp+s-1);
       break;
 
@@ -112,7 +114,8 @@ void genStmt (TreeNode * tree, int temp){
       }
       for (i=0; i < nParam; i ++)
         printf("\tparam t%d\n", s-i);
-      printf("\tcall %s, %d\n", tree->attr.name, temp+s-1);
+      printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, temp+s-1);
+      s++;
       break;
 
     default:

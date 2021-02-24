@@ -27,3 +27,5 @@ Isso gera o executavel cms que aceita como entrada um arquivo de código fonte. P
 ```
 ./cms "arquivo do codigo fonte"
 ```
+
+A saída no terminal contém os tokens identificados e seus lexemas, a árvore de análise sintática formatada por tabulações, a tabela de simbolos gerada, o resultado da verificação de tipos e, por fim, o código de três endereços produzido.
