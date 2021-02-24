@@ -1,7 +1,20 @@
-int soma (int a, int b){
-	return a + b;
+int Input(void){
+	/* funcao de entrada */
+}
+
+void Output(int x){
+	/* funcao de saida */
+}
+
+int gcd(int u, int v) {
+	if (v == 0) return u;
+	else return gcd(v, u-u/v*v);
+	/* u-u/v*v == u mod v */
 }
 
 void main(void){
-	soma(2, 5 + 1);
+	int x; int y;
+	x = Input(); y = Input();
+	Output(gcd(x, y));
 }
+

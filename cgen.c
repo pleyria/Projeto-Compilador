@@ -2,6 +2,7 @@
 #include "symtab.h"
 
 #define TAMBYTES 4
+#define TAMPILHA 100
 
 void genStmt(TreeNode * tree, int temp);
 void genExp(TreeNode * tree, int temp);
@@ -10,6 +11,10 @@ static void cGen(TreeNode * tree);
 
 static int s = 0;
 static int l = 1;
+
+// pilha
+static int pilha[TAMPILHA];
+static int topo = -1;
 
 void genStmt (TreeNode * tree, int temp){
   int h, nParam, i;
@@ -113,7 +118,10 @@ void genStmt (TreeNode * tree, int temp){
         if(param->nodekind == statementK)
           genStmt(param, temp);
         else
-          genExp(param, temp);
+          if(param->kind.exp == constantK || param->kind.exp == idK)
+            genExp(param, temp+s);
+          else
+            genExp(param, temp);
         params[i] = s;
         i++;
         param = param->sibling;
@@ -131,7 +139,7 @@ void genStmt (TreeNode * tree, int temp){
 }
 
 void genExp ( TreeNode * tree, int temp){
-  int h, n;
+  int h, n, ni;
   switch(tree->kind.exp){
     case (typeK):
       cGen(tree->child[0]);
@@ -150,64 +158,123 @@ void genExp ( TreeNode * tree, int temp){
     case (operationK):
       switch (tree->attr.op){
         case (TIMES):
-          genExp(tree->child[0], temp+s);
-          genExp(tree->child[1], temp+s);
-          printf("\tt%d = t%d * t%d\n", temp+s, temp+s-2, temp+s-1);
+          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+            genExp(tree->child[0], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[0], temp);
+          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+            genExp(tree->child[1], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[1], temp);
+          printf("\tt%d = t%d * t%d\n", temp+s, pilha[topo-1], pilha[topo]);
+          topo -= 2;
           s++;
+          pilha[++topo] = temp+s-1;
           break;
+
         case (OVER):
-          genExp(tree->child[0], temp+s);
-          genExp(tree->child[1], temp+s);
-          printf("\tt%d = t%d / t%d\n", temp+s, temp+s-2, temp+s-1);
+          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+            genExp(tree->child[0], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[0], temp);
+          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+            genExp(tree->child[1], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[1], temp);
+          printf("\tt%d = t%d / t%d\n", temp+s, pilha[topo-1], pilha[topo]);
+          topo -= 2;
           s++;
+          pilha[++topo] = temp+s-1;
           break;
+
         case (PLUS):
-          genExp(tree->child[0], temp+s);
-          genExp(tree->child[1], temp+s);
-          printf("\tt%d = t%d + t%d\n", temp+s, temp+s-2, temp+s-1);
+          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+            genExp(tree->child[0], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[0], temp);
+          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+            genExp(tree->child[1], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[1], temp);
+          printf("\tt%d = t%d + t%d\n", temp+s, pilha[topo-1], pilha[topo]);
+          topo -=2;
           s++;
+          pilha[++topo] = temp+s-1;
           break;
+
         case (MINUS):
-          genExp(tree->child[0], temp+s);
-          genExp(tree->child[1], temp+s);
-          printf("\tt%d = t%d - t%d\n", temp+s, temp+s-2, temp+s-1);
+          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+            genExp(tree->child[0], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[0], temp);
+          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+            genExp(tree->child[1], temp+s);
+            pilha[++topo] = temp+s-1;
+          }
+          else
+            genExp(tree->child[1], temp);
+          printf("\tt%d = t%d - t%d\n", temp+s, pilha[topo-1], pilha[topo]);
+          topo -= 2;
           s++;
+          pilha[++topo] = temp+s-1;
           break;
+
         case (LT):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d < t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
+          break;
+
         case (EQ):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d == t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
           break;
+
         case (GT):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d > t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
           break;
+
         case (LTE):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d <= t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
           break;
+
         case (GTE):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d >= t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
           break;
+
         case (NE):
           genExp(tree->child[0], temp+s); 
           genExp(tree->child[1], temp+s);
           printf("\tt%d = t%d != t%d\n", temp+s, temp+s-2, temp+s-1);
           s++;
           break;
+
         default:
           break;
       }
@@ -240,7 +307,6 @@ static void cGen( TreeNode * tree)
       default:
         break;
     }
-    //printf("\n\nirmao\n\n");
     cGen(tree->sibling);
   }
 }
