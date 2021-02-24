@@ -1,15 +1,7 @@
-int soma(int a, int b){
-	int s;
-	s = a + b;
-	return s;
-}
-
-int num(int a){
-	return a;
+int soma (int a, int b){
+	return a + b;
 }
 
 void main(void){
-	int x;
-	
-	num(9);
+	soma(2, 5 + 1);
 }

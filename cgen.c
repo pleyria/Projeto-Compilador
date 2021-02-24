@@ -11,17 +11,9 @@ static void cGen(TreeNode * tree);
 static int s = 0;
 static int l = 1;
 
-int high(TreeNode * tree){
-    int altE,altD;
-    if(tree==NULL) return 0;
-    altE=high(tree->child[0])+1;
-    altD=high(tree->child[1])+1;
-    if(altE>altD) return altE;
-    return altD;
-}
-
 void genStmt (TreeNode * tree, int temp){
   int h, nParam, i;
+  int * params;
   TreeNode * param;
   switch(tree->kind.stmt){
     case (assignK):
@@ -100,21 +92,36 @@ void genStmt (TreeNode * tree, int temp){
       break;
 
     case (returnK):
-      cGen(tree->child[0]);
-      printf("\treturn t%d\n", temp+s);
+      if (tree->child[0]->nodekind == statementK)
+        genStmt(tree->child[0], temp+s);
+      else
+        genExp(tree->child[0], temp+s);
+      printf("\treturn t%d\n", temp+s-1);
       break;
 
     case (callK):
       param = tree->child[0];
       nParam = 0;
       while (param != NULL){
-        genExp(param, temp+s);
         nParam++;
         param = param->sibling;
       }
+      i = 0;
+      params = (int*) malloc(nParam * sizeof(int));
+      param = tree->child[0];
+      while (param != NULL){
+        if(param->nodekind == statementK)
+          genStmt(param, temp);
+        else
+          genExp(param, temp);
+        params[i] = s;
+        i++;
+        param = param->sibling;
+      }
       for (i=0; i < nParam; i ++)
-        printf("\tparam t%d\n", s-i);
-      printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, temp+s-1);
+        printf("\tparam t%d\n", params[i]);
+      free(params);
+      printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, nParam);
       s++;
       break;
 
@@ -238,16 +245,6 @@ static void cGen( TreeNode * tree)
   }
 }
 
-
-/**********************************************/
-/* the primary function of the code generator */
-/**********************************************/
-/* Procedure codeGen generates code to a code
- * file by traversal of the syntax tree. The
- * second parameter (codefile) is the file name
- * of the code file, and is used to print the
- * file name as a comment in the code file
- */
 void codeGen(TreeNode * syntaxTree)
 {  
    printf("\nCodigo de tres enderecos:\n");
