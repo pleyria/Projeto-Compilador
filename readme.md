@@ -5,6 +5,7 @@ inclui implementações:
 * Árvore de análise sintática
 * Tabela de símbolos
 * Analisador semântico
+* Gerador de Código intermediário de três endereços
 
 
 Para compilar:
