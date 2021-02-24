@@ -1,3 +1,8 @@
+/* Scanner. Faz a analise lexica do arquivo fonte de
+acordo com as expressoes regulares das regras da linguagem
+c menos emitindo os toekns reconhecidos como saida. 
+Utiliza a biblioteca Flex */
+
 %{
 #include "globals.h"
 #include "util.h"

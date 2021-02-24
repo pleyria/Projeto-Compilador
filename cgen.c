@@ -1,3 +1,6 @@
+/* Gerador de codigo intermediario. Produz codigo de tres
+enderecos a partir da arvore de analise sintatica */
+
 #include "globals.h"
 #include "symtab.h"
 
@@ -12,10 +15,12 @@ static void cGen(TreeNode * tree);
 static int s = 0;
 static int l = 1;
 
-// pilha
+/* pilha para manipular expressoes com
+mais de dois operandos */
 static int pilha[TAMPILHA];
 static int topo = -1;
 
+/* geracao de codigo de declaracoes */
 void genStmt (TreeNode * tree, int temp){
   int h, nParam, i;
   int * params;
@@ -138,6 +143,7 @@ void genStmt (TreeNode * tree, int temp){
   }
 }
 
+/* gerador de codigo para expressoes */
 void genExp ( TreeNode * tree, int temp){
   int h, n, ni;
   switch(tree->kind.exp){
@@ -294,6 +300,8 @@ void genExp ( TreeNode * tree, int temp){
   }
 }
 
+/* gerador de codigo a partir da raiz da 
+arvore de analise sintatica */
 static void cGen( TreeNode * tree)
 { s = 0;
   if (tree != NULL)
@@ -311,6 +319,7 @@ static void cGen( TreeNode * tree)
   }
 }
 
+/* impressao do codigo intermediario */
 void codeGen(TreeNode * syntaxTree)
 {  
    printf("\nCodigo de tres enderecos:\n");

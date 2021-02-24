@@ -1,5 +1,5 @@
 # Compilador da linguagem C-
-inclui implementações:
+Inclui implementações:
 * Analisador léxico
 * Analisador semântico
 * Árvore de análise sintática

@@ -1,24 +1,15 @@
 #ifndef _SYMTAB_H_
 #define _SYMTAB_H_
 
-/* Procedure st_insert inserts line numbers and
- * memory locations into the symbol table
- * loc = memory location is inserted only the
- * first time, otherwise ignored
- */
+/* insere linhas na tabela hash */
 void st_insert( char * name, int lineno, int loc, char* scope, char* typeID, char* typeData);
 
-/* Function st_lookup returns the memory 
- * location of a variable or -1 if not found
- */
+/* retorna o local de uma variavel na memoria */
 int st_lookup (char * name, char* scope );
 
 char* st_lookup_type(char* name, char* scope);
 
-/* Procedure printSymTab prints a formatted 
- * listing of the symbol table contents 
- * to the listing file
- */
+/* imprime o conteudo da tabela de simbolos */
 void printSymTab(FILE * listing);
 
 #endif

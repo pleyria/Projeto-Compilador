@@ -1,3 +1,6 @@
+/* Tabela de simbolos. Contem a estrutura da
+tabela hash e suas funcoes */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +8,7 @@
 #define SIZE 211
 #define SHIFT 4
 
-
+/* funcao de hash */
 static int hash (char* name, char* scope)
 { 
     int temp = 0;
@@ -24,6 +27,7 @@ static int hash (char* name, char* scope)
     return temp;
 }
 
+/* lista encadeada */
 typedef struct LineListRec
 { 
     int lineno;
@@ -31,6 +35,7 @@ typedef struct LineListRec
     
 } * LineList;
 
+/* sequencia de tokens */
 typedef struct BucketListRec
 { 
      char* name;
@@ -43,8 +48,10 @@ typedef struct BucketListRec
      
  } * BucketList;
 
+/* tabela hash */
 static BucketList hashTable[SIZE];
 
+/* insercao de token */
 void st_insert( char * name, int lineno, int loc, char* scope, 
 		char* typeID, char* typeData)
 { 
@@ -78,6 +85,7 @@ void st_insert( char * name, int lineno, int loc, char* scope,
     }
 } 
 
+/* procura item */
 int st_lookup (char* name, char* scope)
 { 
   int h = hash(name, scope);	
@@ -90,7 +98,7 @@ int st_lookup (char* name, char* scope)
       return l->memloc;
 }
 
-
+/* procura tipo */
 char* st_lookup_type (char* name, char* scope)
 { 
   int h = hash(name, scope);	

@@ -1,3 +1,6 @@
+/* Definicao de parametros, estruturas e funcoes para
+as outras partes do compilador */
+
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
@@ -87,7 +90,7 @@ typedef struct treeNode
         char* scope;	
      } attr;
 
-     ExpressionType type; /* for type checking of exps */
+     ExpressionType type;
 } TreeNode;
 
 

@@ -1,3 +1,8 @@
+/* Analisador sintatico. Casa o fluxo de tokens do
+arquivo fonte com as regras gramaticais da linguagem
+C menos. Adiciona os tokens na arvore de analise sintatica.
+Utiliza a biblioteca Bison. */
+
 %{
     #define YYPARSER    
     #include "globals.h"

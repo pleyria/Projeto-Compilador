@@ -1,3 +1,6 @@
+/* Analisador semantico que preenche a tabela de simbolos
+e faz a verificacao de tipos */
+
 #include "globals.h"
 #include "symtab.h"
 #include "analyze.h"
@@ -7,14 +10,12 @@ static void typeError(TreeNode * t, char * message)
   Error = TRUE;
 }
 
-/* counter for variable memory locations */
+/* contador de locais de memoria */
 static int location = 0;
 
-/* Procedure traverse is a generic recursive 
- * syntax tree traversal routine:
- * it applies preProc in preorder and postProc 
- * in postorder to tree pointed to by t
- */
+/* percorre a arvora em pre ordem para constriuir a 
+tabela de simbolos e depois percorre em pos ordem 
+para fazer a verificacao de tipos */
 static void traverse( TreeNode * t,
                void (* preProc) (TreeNode *),
                void (* postProc) (TreeNode *) )
@@ -33,10 +34,8 @@ static void traverse( TreeNode * t,
   	}
 }
 
-/* nullProc is a do-nothing procedure to 
- * generate preorder-only or postorder-only
- * traversals from traverse
- */
+/* nao realiza nenhuma acao para os casos
+de apenas pre ordem ou apenas em pos ordem */
 static void nullProc(TreeNode * t)
 { 
 	if (t==NULL) 
@@ -45,10 +44,8 @@ static void nullProc(TreeNode * t)
 		return;
 }
 
-/* Procedure insertNode inserts 
- * identifiers stored in t into 
- * the symbol table 
- */
+/* insere identificadores da arvore
+na tabela de simbolos */
 static void insertNode( TreeNode * t)
 { 
 	
@@ -118,6 +115,7 @@ static void insertNode( TreeNode * t)
   }
 }
 
+/* constroi a tabela de simbolos */
 void buildSymtab(TreeNode * syntaxTree)
 { 
    

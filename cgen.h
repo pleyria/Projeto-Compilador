@@ -1,20 +1,8 @@
-/****************************************************/
-/* File: cgen.h                                     */
-/* The code generator interface to the TINY compiler*/
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #ifndef _CGEN_H_
 #define _CGEN_H_
 
-/* Procedure codeGen generates code to a code
- * file by traversal of the syntax tree. The
- * second parameter (codefile) is the file name
- * of the code file, and is used to print the
- * file name as a comment in the code file
- */
-
+/* funcoes para gerar o codigo intermediario de
+tres enderecos percorrendo a arvore sintatica */
 void genStmt(TreeNode * tree, int temp);
 void genExp(TreeNode * tree, int temp);
 void codeGen(TreeNode * syntaxTree);

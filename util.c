@@ -1,6 +1,7 @@
 #include "globals.h"
 #include "util.h"
 
+/* imprime informacoes sobre um token identificado na analise lexica */
 void printToken( TokenType token, const char* tokenString )
 { 
   switch (token)
@@ -46,6 +47,7 @@ void printToken( TokenType token, const char* tokenString )
   }
 }
 
+/* atribuicao do escopo em nos da arvore */
 void aggScope(TreeNode* t, char* scope)
 {
 	int i;
@@ -60,6 +62,7 @@ void aggScope(TreeNode* t, char* scope)
 	}
 }
 
+/* criacao de subarvore de declaracao */
 TreeNode * newStmtNode(StatementKind kind)
 { 
     TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
@@ -79,7 +82,7 @@ TreeNode * newStmtNode(StatementKind kind)
     return t;
 }
 
-
+/* criacao de subarvore de expressao */
 TreeNode * newExpNode(ExpressionIdentifier kind)
 { 
     TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
@@ -100,6 +103,7 @@ TreeNode * newExpNode(ExpressionIdentifier kind)
     return t;
 }
 
+/* retorna uma copia da string de entrada */
 char * copyString(char * s)
 { 
     int n;
@@ -129,7 +133,8 @@ static void printSpaces(void)
       fprintf(listing," ");
 }
 
-
+/* impressao da arvore de analise sintatica usando
+tabulacoes para indicar subarvores */
 void printTree( TreeNode * tree )
 { int i;
   INDENT;

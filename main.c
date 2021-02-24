@@ -1,13 +1,14 @@
+/* Arquivo principal onde sao chamadas as rotinas de
+analise do codigo fonte e sintese do codigo intermediario. */
+
 #include "globals.h"
 
-/* set NO_PARSE to TRUE to get a scanner-only compiler */
+/* definir como TRUE para ter apenas o scanner */
 #define NO_PARSE FALSE
-/* set NO_ANALYZE to TRUE to get a parser-only compiler */
+/* definir como TRUE para nao ter analise semantica */
 #define NO_ANALYZE FALSE
 
-/* set NO_CODE to TRUE to get a compiler that does not
- * generate code
- */
+/* definir com TRUE para nao gerar o codigo intermediario */
 #define NO_CODE FALSE
 
 #include "util.h"
@@ -23,13 +24,12 @@
 #endif
 #endif
 
-/* allocate global variables */
 int lineno = 0;
 FILE * source;
 FILE * listing;
 FILE * code;
 
-/* allocate and set tracing flags */
+/* flags */
 int EchoSource = FALSE;
 int TraceScan = TRUE;
 int TraceParse = TRUE;
@@ -40,7 +40,7 @@ int Error = FALSE;
 
 main( int argc, char * argv[] )
 { TreeNode * syntaxTree;
-  char pgm[120]; /* source code file name */
+  char pgm[120]; 
   if (argc != 2)
     { fprintf(stderr,"usage: %s <filename>\n",argv[0]);
       exit(1);
