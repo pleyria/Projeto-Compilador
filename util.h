@@ -11,4 +11,6 @@ char * copyString( char * );
 
 void printTree( TreeNode * );
 
+void aggScope(TreeNode* t, char* scope);
+
 #endif

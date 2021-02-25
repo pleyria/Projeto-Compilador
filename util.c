@@ -119,7 +119,7 @@ char * copyString(char * s)
     return t;
 }
 
-static indentno = 0;
+static int indentno = 0;
 
 
 #define INDENT indentno+=2

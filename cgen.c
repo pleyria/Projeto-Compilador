@@ -22,16 +22,32 @@ static int topo = -1;
 
 /* geracao de codigo de declaracoes */
 void genStmt (TreeNode * tree, int temp){
-  int h, nParam, i;
+  int h, nParam, i, v, n;
   int * params;
   TreeNode * param;
   switch(tree->kind.stmt){
     case (assignK):
-      if (tree->child[1]->nodekind == statementK)
-        genStmt(tree->child[1], temp);
-      else
-        genExp(tree->child[1], temp);
-      printf("\t%s = t%d\n", tree->child[0]->attr.name, temp+s-1);
+      if (tree->child[0]->kind.exp == idK) {
+        if (tree->child[1]->nodekind == statementK)
+          genStmt(tree->child[1], temp);
+        else
+          genExp(tree->child[1], temp);
+        printf("\t%s = t%d\n", tree->child[0]->attr.name, temp+s-1);
+      }
+      else if (tree->child[0]->kind.exp == vectorK) {
+        genExp(tree->child[0], temp);
+        v = s;
+        if (tree->child[1]->nodekind == statementK)
+          genStmt(tree->child[1], temp);
+        else{
+          if (tree->child[1]->kind.exp == vectorK)
+            genExp(tree->child[1], temp);
+          else
+            genExp(tree->child[1], temp+s);
+        }
+        printf("\tt%d = t%d\n", v, temp+s-1);
+      }
+
       break;
 
     case (functionK):
@@ -292,6 +308,7 @@ void genExp ( TreeNode * tree, int temp){
       printf("\tt%d = t%d * %d\n", temp+s, temp+s-1, n);
       s++;
       printf("\tt%d = %s[t%d]\n", temp+s, tree->attr.name, temp+s-1);
+      pilha[++topo] = temp+s;
       s++;
       break;
 
@@ -304,6 +321,7 @@ void genExp ( TreeNode * tree, int temp){
 arvore de analise sintatica */
 static void cGen( TreeNode * tree)
 { s = 0;
+  topo = -1;
   if (tree != NULL)
   { switch (tree->nodekind) {
       case statementK:

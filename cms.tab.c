@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "cms.y"
+#line 6 "cms.y"
 
     #define YYPARSER    
     #include "globals.h"
@@ -535,13 +535,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    20,    20,    25,    38,    43,    47,    52,    62,    74,
-      89,   103,   107,   113,   126,   131,   142,   154,   167,   171,
-     175,   179,   192,   197,   210,   215,   219,   223,   227,   231,
-     236,   240,   244,   250,   259,   266,   271,   277,   283,   288,
-     292,   300,   306,   311,   317,   323,   329,   335,   341,   348,
-     354,   359,   364,   370,   376,   381,   386,   392,   396,   400,
-     404,   409,   416,   424,   437,   442,   448
+       0,    25,    25,    30,    43,    48,    52,    57,    67,    79,
+      94,   108,   112,   118,   131,   136,   147,   159,   172,   176,
+     180,   184,   197,   202,   215,   220,   224,   228,   232,   236,
+     241,   245,   249,   255,   264,   271,   276,   282,   288,   293,
+     297,   305,   311,   316,   322,   328,   334,   340,   346,   353,
+     359,   364,   369,   375,   381,   386,   391,   397,   401,   405,
+     409,   414,   421,   429,   442,   447,   453
 };
 #endif
 
@@ -1413,7 +1413,7 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 21 "cms.y"
+#line 26 "cms.y"
                        {
                           savedTree = yyvsp[0];
                        }
@@ -1421,7 +1421,7 @@ yyreduce:
     break;
 
   case 3:
-#line 26 "cms.y"
+#line 31 "cms.y"
                         {
                             YYSTYPE t = yyvsp[-1];
                             if(t != NULL)
@@ -1438,7 +1438,7 @@ yyreduce:
     break;
 
   case 4:
-#line 39 "cms.y"
+#line 44 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1446,7 +1446,7 @@ yyreduce:
     break;
 
   case 5:
-#line 44 "cms.y"
+#line 49 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1454,7 +1454,7 @@ yyreduce:
     break;
 
   case 6:
-#line 48 "cms.y"
+#line 53 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1462,7 +1462,7 @@ yyreduce:
     break;
 
   case 7:
-#line 53 "cms.y"
+#line 58 "cms.y"
                         {	
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
@@ -1476,7 +1476,7 @@ yyreduce:
     break;
 
   case 8:
-#line 63 "cms.y"
+#line 68 "cms.y"
                         {
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
@@ -1491,7 +1491,7 @@ yyreduce:
     break;
 
   case 9:
-#line 75 "cms.y"
+#line 80 "cms.y"
                         {
                         	yyval = newExpNode(typeK);
                             yyval->type = integerK;
@@ -1510,7 +1510,7 @@ yyreduce:
     break;
 
   case 10:
-#line 90 "cms.y"
+#line 95 "cms.y"
                         {
                         	yyval = newExpNode(typeK);
                             yyval->type = voidK;
@@ -1527,7 +1527,7 @@ yyreduce:
     break;
 
   case 11:
-#line 104 "cms.y"
+#line 109 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1535,7 +1535,7 @@ yyreduce:
     break;
 
   case 12:
-#line 108 "cms.y"
+#line 113 "cms.y"
                         {
 						  yyval = newExpNode(typeK);
            				  yyval->attr.name = "void";
@@ -1544,7 +1544,7 @@ yyreduce:
     break;
 
   case 13:
-#line 114 "cms.y"
+#line 119 "cms.y"
                         {
                            YYSTYPE t = yyvsp[-2];
                            if(t != NULL)
@@ -1561,7 +1561,7 @@ yyreduce:
     break;
 
   case 14:
-#line 127 "cms.y"
+#line 132 "cms.y"
                         {
                             yyval = yyvsp[0];
                         }
@@ -1569,7 +1569,7 @@ yyreduce:
     break;
 
   case 15:
-#line 132 "cms.y"
+#line 137 "cms.y"
                         {
 						   	
                            yyval = newExpNode(typeK);
@@ -1584,7 +1584,7 @@ yyreduce:
     break;
 
   case 16:
-#line 143 "cms.y"
+#line 148 "cms.y"
                         {
 							
                             yyval = newExpNode(typeK);
@@ -1599,7 +1599,7 @@ yyreduce:
     break;
 
   case 17:
-#line 155 "cms.y"
+#line 160 "cms.y"
                         {
                             YYSTYPE t = yyvsp[-2];
                             if(t != NULL)
@@ -1616,7 +1616,7 @@ yyreduce:
     break;
 
   case 18:
-#line 168 "cms.y"
+#line 173 "cms.y"
                         {
                             yyval = yyvsp[-1];
                         }
@@ -1624,7 +1624,7 @@ yyreduce:
     break;
 
   case 19:
-#line 172 "cms.y"
+#line 177 "cms.y"
                         {
                             yyval = yyvsp[-1];
                         }
@@ -1632,14 +1632,14 @@ yyreduce:
     break;
 
   case 20:
-#line 176 "cms.y"
+#line 181 "cms.y"
                         {
 			   			}
 #line 1639 "cms.tab.c"
     break;
 
   case 21:
-#line 180 "cms.y"
+#line 185 "cms.y"
                         {
                             YYSTYPE t = yyvsp[-1];
                             if(t != NULL)
@@ -1656,7 +1656,7 @@ yyreduce:
     break;
 
   case 22:
-#line 193 "cms.y"
+#line 198 "cms.y"
                         {
                             yyval = yyvsp[0];
                         }
@@ -1664,7 +1664,7 @@ yyreduce:
     break;
 
   case 23:
-#line 198 "cms.y"
+#line 203 "cms.y"
                         {
                            YYSTYPE t = yyvsp[-1];
                            if(t != NULL)
@@ -1681,7 +1681,7 @@ yyreduce:
     break;
 
   case 24:
-#line 211 "cms.y"
+#line 216 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1689,7 +1689,7 @@ yyreduce:
     break;
 
   case 25:
-#line 216 "cms.y"
+#line 221 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1697,7 +1697,7 @@ yyreduce:
     break;
 
   case 26:
-#line 220 "cms.y"
+#line 225 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1705,7 +1705,7 @@ yyreduce:
     break;
 
   case 27:
-#line 224 "cms.y"
+#line 229 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1713,7 +1713,7 @@ yyreduce:
     break;
 
   case 28:
-#line 228 "cms.y"
+#line 233 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1721,7 +1721,7 @@ yyreduce:
     break;
 
   case 29:
-#line 232 "cms.y"
+#line 237 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
@@ -1729,7 +1729,7 @@ yyreduce:
     break;
 
   case 30:
-#line 237 "cms.y"
+#line 242 "cms.y"
                         {
                            yyval = yyvsp[-1];
                         }
@@ -1737,14 +1737,14 @@ yyreduce:
     break;
 
   case 31:
-#line 241 "cms.y"
+#line 246 "cms.y"
                         {
 						}
 #line 1744 "cms.tab.c"
     break;
 
   case 32:
-#line 245 "cms.y"
+#line 250 "cms.y"
                         {
                              yyval = newStmtNode(ifK);
                              yyval->child[0] = yyvsp[-2];
@@ -1754,7 +1754,7 @@ yyreduce:
     break;
 
   case 33:
-#line 251 "cms.y"
+#line 256 "cms.y"
                         {
 							 
                              yyval = newStmtNode(ifK);
@@ -1766,7 +1766,7 @@ yyreduce:
     break;
 
   case 34:
-#line 260 "cms.y"
+#line 265 "cms.y"
                         {
                              yyval = newStmtNode(whileK);
                              yyval->child[0] = yyvsp[-2];
@@ -1776,7 +1776,7 @@ yyreduce:
     break;
 
   case 35:
-#line 267 "cms.y"
+#line 272 "cms.y"
                        {
                             yyval = newStmtNode(returnK);
 							yyval->type = voidK;
@@ -1785,7 +1785,7 @@ yyreduce:
     break;
 
   case 36:
-#line 272 "cms.y"
+#line 277 "cms.y"
                        {
                             yyval = newStmtNode(returnK);
                             yyval->child[0] = yyvsp[-1];
@@ -1794,7 +1794,7 @@ yyreduce:
     break;
 
   case 37:
-#line 278 "cms.y"
+#line 283 "cms.y"
                        {
                             yyval = newStmtNode(assignK);
                             yyval->child[0] = yyvsp[-2];
@@ -1804,7 +1804,7 @@ yyreduce:
     break;
 
   case 38:
-#line 284 "cms.y"
+#line 289 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1812,7 +1812,7 @@ yyreduce:
     break;
 
   case 39:
-#line 289 "cms.y"
+#line 294 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1820,7 +1820,7 @@ yyreduce:
     break;
 
   case 40:
-#line 293 "cms.y"
+#line 298 "cms.y"
                        {
                             yyval = yyvsp[-3];
                             yyval->child[0] = yyvsp[-1];
@@ -1831,7 +1831,7 @@ yyreduce:
     break;
 
   case 41:
-#line 301 "cms.y"
+#line 306 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
@@ -1841,7 +1841,7 @@ yyreduce:
     break;
 
   case 42:
-#line 307 "cms.y"
+#line 312 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1849,7 +1849,7 @@ yyreduce:
     break;
 
   case 43:
-#line 312 "cms.y"
+#line 317 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = EQ;  
@@ -1859,7 +1859,7 @@ yyreduce:
     break;
 
   case 44:
-#line 318 "cms.y"
+#line 323 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = NE;
@@ -1869,7 +1869,7 @@ yyreduce:
     break;
 
   case 45:
-#line 324 "cms.y"
+#line 329 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = LT;                            
@@ -1879,7 +1879,7 @@ yyreduce:
     break;
 
   case 46:
-#line 330 "cms.y"
+#line 335 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = LTE;                            
@@ -1889,7 +1889,7 @@ yyreduce:
     break;
 
   case 47:
-#line 336 "cms.y"
+#line 341 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = GT;                            
@@ -1899,7 +1899,7 @@ yyreduce:
     break;
 
   case 48:
-#line 342 "cms.y"
+#line 347 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = GTE;                            
@@ -1909,7 +1909,7 @@ yyreduce:
     break;
 
   case 49:
-#line 349 "cms.y"
+#line 354 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
@@ -1919,7 +1919,7 @@ yyreduce:
     break;
 
   case 50:
-#line 355 "cms.y"
+#line 360 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1927,7 +1927,7 @@ yyreduce:
     break;
 
   case 51:
-#line 360 "cms.y"
+#line 365 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = PLUS;                            
@@ -1936,7 +1936,7 @@ yyreduce:
     break;
 
   case 52:
-#line 365 "cms.y"
+#line 370 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = MINUS;                            
@@ -1945,7 +1945,7 @@ yyreduce:
     break;
 
   case 53:
-#line 371 "cms.y"
+#line 376 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
@@ -1955,7 +1955,7 @@ yyreduce:
     break;
 
   case 54:
-#line 377 "cms.y"
+#line 382 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1963,7 +1963,7 @@ yyreduce:
     break;
 
   case 55:
-#line 382 "cms.y"
+#line 387 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = TIMES;                            
@@ -1972,7 +1972,7 @@ yyreduce:
     break;
 
   case 56:
-#line 387 "cms.y"
+#line 392 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = OVER;                            
@@ -1981,7 +1981,7 @@ yyreduce:
     break;
 
   case 57:
-#line 393 "cms.y"
+#line 398 "cms.y"
                        {
                             yyval = yyvsp[-1];
                        }
@@ -1989,7 +1989,7 @@ yyreduce:
     break;
 
   case 58:
-#line 397 "cms.y"
+#line 402 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -1997,7 +1997,7 @@ yyreduce:
     break;
 
   case 59:
-#line 401 "cms.y"
+#line 406 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -2005,7 +2005,7 @@ yyreduce:
     break;
 
   case 60:
-#line 405 "cms.y"
+#line 410 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
@@ -2013,7 +2013,7 @@ yyreduce:
     break;
 
   case 61:
-#line 410 "cms.y"
+#line 415 "cms.y"
                        {
                             yyval = yyvsp[-3];
                             yyval->child[0] = yyvsp[-1];
@@ -2024,7 +2024,7 @@ yyreduce:
     break;
 
   case 62:
-#line 417 "cms.y"
+#line 422 "cms.y"
                                            {
                             yyval = yyvsp[-2];
                             yyval->nodekind = statementK;
@@ -2034,7 +2034,7 @@ yyreduce:
     break;
 
   case 63:
-#line 425 "cms.y"
+#line 430 "cms.y"
                        {
                             YYSTYPE t = yyvsp[-2];
                              if(t != NULL)
@@ -2051,7 +2051,7 @@ yyreduce:
     break;
 
   case 64:
-#line 438 "cms.y"
+#line 443 "cms.y"
                         {
                              yyval = yyvsp[0];
                         }
@@ -2059,7 +2059,7 @@ yyreduce:
     break;
 
   case 65:
-#line 443 "cms.y"
+#line 448 "cms.y"
                         {
                              yyval = newExpNode(idK);
                              yyval->attr.name = copyString(tokenString);
@@ -2068,7 +2068,7 @@ yyreduce:
     break;
 
   case 66:
-#line 449 "cms.y"
+#line 454 "cms.y"
                         {
                              yyval = newExpNode(constantK);
                              yyval->attr.val = atoi(tokenString);
@@ -2310,7 +2310,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 456 "cms.y"
+#line 461 "cms.y"
 
 
 int yyerror(char* message){

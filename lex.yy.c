@@ -478,15 +478,19 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "cms.l"
-#line 2 "cms.l"
+/* Scanner. Faz a analise lexica do arquivo fonte de
+acordo com as expressoes regulares das regras da linguagem
+c menos emitindo os toekns reconhecidos como saida. 
+Utiliza a biblioteca Flex */
+#line 7 "cms.l"
 #include "globals.h"
 #include "util.h"
 #include "scan.h"
 
 char tokenString[MAXTOKENLEN+1];
 static int yylex(void);
-#line 489 "lex.yy.c"
-#line 490 "lex.yy.c"
+#line 493 "lex.yy.c"
+#line 494 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -703,9 +707,9 @@ YY_DECL
 		}
 
 	{
-#line 18 "cms.l"
+#line 23 "cms.l"
 
-#line 709 "lex.yy.c"
+#line 713 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -764,7 +768,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 19 "cms.l"
+#line 24 "cms.l"
 { char c;
                   do
                   { c = input();
@@ -780,161 +784,161 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 31 "cms.l"
+#line 36 "cms.l"
 {return IF;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 32 "cms.l"
+#line 37 "cms.l"
 {return ELSE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 33 "cms.l"
+#line 38 "cms.l"
 {return INT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "cms.l"
+#line 39 "cms.l"
 {return RETURN;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "cms.l"
+#line 40 "cms.l"
 {return VOID;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 36 "cms.l"
+#line 41 "cms.l"
 {return WHILE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 37 "cms.l"
+#line 42 "cms.l"
 {return ASSIGN;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 38 "cms.l"
+#line 43 "cms.l"
 {return EQ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 39 "cms.l"
+#line 44 "cms.l"
 {return LT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 40 "cms.l"
+#line 45 "cms.l"
 {return GT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 41 "cms.l"
+#line 46 "cms.l"
 {return LTE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 42 "cms.l"
+#line 47 "cms.l"
 {return GTE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 43 "cms.l"
+#line 48 "cms.l"
 {return NE;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 44 "cms.l"
+#line 49 "cms.l"
 {return LBRACKET;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 45 "cms.l"
+#line 50 "cms.l"
 {return RBRACKET;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 46 "cms.l"
+#line 51 "cms.l"
 {return LKEYS;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 47 "cms.l"
+#line 52 "cms.l"
 {return RKEYS;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 48 "cms.l"
+#line 53 "cms.l"
 {return PLUS;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 49 "cms.l"
+#line 54 "cms.l"
 {return MINUS;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 50 "cms.l"
+#line 55 "cms.l"
 {return TIMES;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "cms.l"
+#line 56 "cms.l"
 {return OVER;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 52 "cms.l"
+#line 57 "cms.l"
 {return LPAREN;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 53 "cms.l"
+#line 58 "cms.l"
 {return RPAREN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 54 "cms.l"
+#line 59 "cms.l"
 {return SEMI;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 55 "cms.l"
+#line 60 "cms.l"
 {return COMMA;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 56 "cms.l"
+#line 61 "cms.l"
 {return NUM;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 57 "cms.l"
+#line 62 "cms.l"
 {return ID;}
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 58 "cms.l"
+#line 63 "cms.l"
 {lineno++;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 59 "cms.l"
+#line 64 "cms.l"
 {         }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 60 "cms.l"
+#line 65 "cms.l"
 {return ERROR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 62 "cms.l"
+#line 67 "cms.l"
 ECHO;
 	YY_BREAK
-#line 938 "lex.yy.c"
+#line 942 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1939,7 +1943,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 62 "cms.l"
+#line 67 "cms.l"
 
 
 TokenType getToken(void)
