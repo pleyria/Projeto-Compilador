@@ -73,10 +73,12 @@ static void insertNode( TreeNode * t)
             		typeError(t,"Erro 4: Declaracao invalida. Ja declarado.");	
 			break;
 			case callK:
-				if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-            		typeError(t,"Erro 5: Chamada invalida. Nao foi declarada.");	
-          		else
-            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "chamada", "-");
+				if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1){
+          if (!strcmp(t->attr.name, "input") && !strcmp(t->attr.name, "output"))
+            typeError(t,"Erro 5: Chamada invalida. Nao foi declarada.");
+        }
+        else
+          st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "chamada", "-");
 
 			case returnK:
           	break;
