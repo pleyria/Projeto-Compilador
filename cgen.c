@@ -38,7 +38,6 @@ static int P_while_comeco_topo = -1;
 static int P_while_fim[TAMPILHA];
 static int P_while_fim_topo = -1;
 
-
 /* arquvio para escrita do codigo intermediario */
 static FILE* itmc;
 
@@ -55,21 +54,17 @@ void genStmt (TreeNode * tree, int temp){
         else
           genExp(tree->child[1], temp);
         printf("\t%s = t%d\n", tree->child[0]->attr.name, temp+s-1);
-        fprintf(itmc, "(ASSIGN, %s, $t%d, )\n", tree->child[0]->attr.name, temp+s-1);
+        fprintf(itmc, "(STORE, %s, $t%d, )\n", tree->child[0]->attr.name, temp+s-1);
       }
       else if (tree->child[0]->kind.exp == vectorK) {
-        genExp(tree->child[0], temp);
+        genExp(tree->child[0]->child[0], temp);
         v = s;
         if (tree->child[1]->nodekind == statementK)
           genStmt(tree->child[1], temp);
-        else{
-          if (tree->child[1]->kind.exp == vectorK)
-            genExp(tree->child[1], temp);
-          else
-            genExp(tree->child[1], temp+s);
-        }
-        printf("\tt%d = t%d\n", v, temp+s-1);
-        fprintf(itmc, "(ASSIGN, $t%d, $t%d, )\n", v, temp+s-1);
+        else
+          genExp(tree->child[1], temp);
+        printf("\t%s[t%d] = t%d\n", tree->child[0]->attr.name, v, temp+s-1);
+        fprintf(itmc, "(STORE, %s, $t%d, $t%d)\n", tree->child[0]->attr.name, temp+s-1, v);
       }
 
       break;
@@ -83,6 +78,12 @@ void genStmt (TreeNode * tree, int temp){
         default:
           fprintf(itmc, "(FUN, void, %s, )\n", tree->attr.name);
           break;
+      }
+      param = tree->child[0]; // declaracao dos parametros
+      while (param != NULL){
+        if (param->type == integerK)
+          fprintf(itmc, "(ARG, %s, %s, )\n", param->child[0]->attr.name, param->attr.scope);
+        param = param->sibling;
       }
       cGen(tree->child[1]);
       break;
@@ -112,47 +113,54 @@ void genStmt (TreeNode * tree, int temp){
       l++;
       switch(tree->child[0]->attr.op){
         case (LT):
-          genExp(tree->child[0]->child[0], temp); 
+          genExp(tree->child[0]->child[0], temp);
+          v = s; // guarda o lado esquerdo da compracao
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d > t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(GTE, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d >= t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(GTE, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
         case (EQ):
-          genExp(tree->child[0]->child[0], temp); 
+          genExp(tree->child[0]->child[0], temp);
+          v = s; // guarda o lado esquerdo da compracao 
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d != t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(NE, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d != t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(NE, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
         case (GT):
-          genExp(tree->child[0]->child[0], temp); 
+          genExp(tree->child[0]->child[0], temp);
+          v = s; // guarda o lado esquerdo da compracao
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d < t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(LTE, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d < t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(LTE, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
         case (LTE):
-          genExp(tree->child[0]->child[0], temp); 
+          genExp(tree->child[0]->child[0], temp);
+          v = s; // guarda o lado esquerdo da compracao
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d > t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(GT, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d > t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(GT, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
         case (GTE):
-          genExp(tree->child[0]->child[0], temp); 
+          genExp(tree->child[0]->child[0], temp);
+          v = s; // guarda o lado esquerdo da compracao
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d < t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(LT, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d < t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(LT, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
         case (NE):
           genExp(tree->child[0]->child[0], temp); 
+          v = s; // guarda o lado esquerdo da compracao
           genExp(tree->child[0]->child[1], temp);
-          printf("\tt%d = t%d == t%d\n", temp+s, temp+s-2, temp+s-1);
-          fprintf(itmc, "(EQ, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
+          printf("\tt%d = t%d == t%d\n", temp+s, v, temp+s-1);
+          fprintf(itmc, "(EQ, $t%d, $t%d, $t%d)\n", temp+s, v, temp+s-1);
           s++;
           break;
+
         default:
           break;
       }
@@ -218,6 +226,12 @@ void genExp ( TreeNode * tree, int temp){
   int h, n, ni;
   switch(tree->kind.exp){
     case (typeK):
+      if (tree->child[0]->kind.stmt == variableK){ // alocacao
+        if (tree->child[0]->attr.len == 0) // variaveis simples
+          fprintf(itmc, "(ALLOC, %s, %s, 1)\n", tree->child[0]->attr.name, tree->child[0]->attr.scope);
+        else // vetores
+          fprintf(itmc, "(ALLOC, %s, %s, %d)\n", tree->child[0]->attr.name, tree->child[0]->attr.scope, tree->child[0]->attr.len);
+      }
       cGen(tree->child[0]);
       break;
 
@@ -229,7 +243,7 @@ void genExp ( TreeNode * tree, int temp){
 
     case (idK):
       printf("\tt%d = %s\n", temp+s, tree->attr.name);
-      fprintf(itmc, "(ASSIGN, $t%d, %s, )\n", temp+s, tree->attr.name);
+      fprintf(itmc, "(LOAD, $t%d, %s, )\n", temp+s, tree->attr.name);
       s++;
       break;
 
@@ -356,7 +370,7 @@ void genExp ( TreeNode * tree, int temp){
           break;
 
         case (NE):
-          genExp(tree->child[0], temp); 
+          genExp(tree->child[0], temp);
           genExp(tree->child[1], temp);
           printf("\tt%d = t%d != t%d\n", temp+s, temp+s-2, temp+s-1);
           fprintf(itmc, "(NE, $t%d, $t%d, $t%d)\n", temp+s, temp+s-2, temp+s-1);
@@ -369,13 +383,10 @@ void genExp ( TreeNode * tree, int temp){
       break;
 
     case vectorK:
-      n = TAMBYTES;
       genExp(tree->child[0], temp);
-      printf("\tt%d = t%d * %d\n", temp+s, temp+s-1, n);
-      fprintf(itmc, "\tt%d = t%d * %d\n", temp+s, temp+s-1, n);
-      s++;
+      // s++;
       printf("\tt%d = %s[t%d]\n", temp+s, tree->attr.name, temp+s-1);
-      fprintf(itmc, "\tt%d = %s[t%d]\n", temp+s, tree->attr.name, temp+s-1);
+      fprintf(itmc, "(LOAD, $t%d, %s, $t%d)\n", temp+s, tree->attr.name, temp+s-1);
       pilha[++topo] = temp+s;
       s++;
       break;

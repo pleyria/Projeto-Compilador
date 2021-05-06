@@ -1,7 +1,10 @@
-int x[4];
+int funcao(int p, int q){
+	int w;	
+}
 
 void main(void){
-	
-	x[0] = 10;
+	int x;
+	int v[10];
+	v[0] = 4;
 }
 
