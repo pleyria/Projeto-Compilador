@@ -3,6 +3,7 @@ enderecos a partir da arvore de analise sintatica */
 
 #include "globals.h"
 #include "symtab.h"
+#include "util.h"
 
 #define TAMBYTES 4
 #define TAMPILHA 100
@@ -41,6 +42,10 @@ static int P_while_fim_topo = -1;
 /* arquvio para escrita do codigo intermediario */
 static FILE* itmc;
 
+/* flag para finalizacao de funcoes */
+static int funOpen = FALSE;
+static char* funName;
+
 /* geracao de codigo de declaracoes */
 void genStmt (TreeNode * tree, int temp){
   int h, nParam, i, v, n;
@@ -70,7 +75,17 @@ void genStmt (TreeNode * tree, int temp){
       break;
 
     case (functionK):
+      // quadrupla de termino de funcao
+      if (!funOpen){
+        funName = copyString(tree->attr.name);
+        funOpen = !funOpen;
+      }
+      else{
+        fprintf(itmc, "(END, %s, , )\n", funName);
+        funName = copyString(tree->attr.name);
+      }
       printf("\n%s:\n", tree->attr.name);
+      // quadrupla de declaracao de funcao
       switch (tree->type){
         case(integerK):
           fprintf(itmc, "(FUN, int, %s, )\n", tree->attr.name);
@@ -79,7 +94,8 @@ void genStmt (TreeNode * tree, int temp){
           fprintf(itmc, "(FUN, void, %s, )\n", tree->attr.name);
           break;
       }
-      param = tree->child[0]; // declaracao dos parametros
+      // declaracao de parametros
+      param = tree->child[0];
       while (param != NULL){
         if (param->type == integerK)
           fprintf(itmc, "(ARG, %s, %s, )\n", param->child[0]->attr.name, param->attr.scope);
@@ -425,6 +441,8 @@ void codeGen(TreeNode * syntaxTree)
    printf("\nCodigo de tres enderecos:\n");
    cGen(syntaxTree);
    printf("\n");
+   fprintf(itmc, "(END, %s, , )\n", funName);
    fprintf(itmc, "(HLT, , , )\n");
+   free(funName);
    fclose(itmc);
 }
