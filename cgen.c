@@ -59,7 +59,7 @@ void genStmt (TreeNode * tree, int temp){
         else
           genExp(tree->child[1], temp);
         printf("\t%s = t%d\n", tree->child[0]->attr.name, temp+s-1);
-        fprintf(itmc, "(STORE, %s, $t%d, )\n", tree->child[0]->attr.name, temp+s-1);
+        fprintf(itmc, "(STORE, %s, $t%d, -)\n", tree->child[0]->attr.name, temp+s-1);
       }
       else if (tree->child[0]->kind.exp == vectorK) {
         genExp(tree->child[0]->child[0], temp);
@@ -81,24 +81,24 @@ void genStmt (TreeNode * tree, int temp){
         funOpen = !funOpen;
       }
       else{
-        fprintf(itmc, "(END, %s, , )\n", funName);
+        fprintf(itmc, "(END, %s, -, -)\n", funName);
         funName = copyString(tree->attr.name);
       }
       printf("\n%s:\n", tree->attr.name);
       // quadrupla de declaracao de funcao
       switch (tree->type){
         case(integerK):
-          fprintf(itmc, "(FUN, int, %s, )\n", tree->attr.name);
+          fprintf(itmc, "(FUN, int, %s, -)\n", tree->attr.name);
           break;
         default:
-          fprintf(itmc, "(FUN, void, %s, )\n", tree->attr.name);
+          fprintf(itmc, "(FUN, void, %s, -)\n", tree->attr.name);
           break;
       }
       // declaracao de parametros
       param = tree->child[0];
       while (param != NULL){
         if (param->type == integerK)
-          fprintf(itmc, "(ARG, %s, %s, )\n", param->child[0]->attr.name, param->attr.scope);
+          fprintf(itmc, "(ARG, %s, %s, -)\n", param->child[0]->attr.name, param->attr.scope);
         param = param->sibling;
       }
       cGen(tree->child[1]);
@@ -107,24 +107,24 @@ void genStmt (TreeNode * tree, int temp){
     case (ifK):
       genExp(tree->child[0], temp);
       printf("\tif t%d goto L%d\n", temp+s-1, l);
-      fprintf(itmc, "(IF, $t%d, L%d, )\n", temp+s-1, l);
+      fprintf(itmc, "(IF, $t%d, L%d, -)\n", temp+s-1, l);
       F_gotoif[F_gotoif_t++] = l;
       l++;
       cGen(tree->child[2]);
       printf("\tgoto L%d\n", l);
-      fprintf(itmc, "(GOTO, L%d, , )\n", l);
+      fprintf(itmc, "(GOTO, L%d, -, -)\n", l);
       P_gotoif[++P_gotoif_topo] = l;
       l++;
       printf("L%d:", F_gotoif[F_gotoif_f++]);
-      fprintf(itmc, "(LABEL, L%d, , )\n", F_gotoif[F_gotoif_f-1]);
+      fprintf(itmc, "(LABEL, L%d, -, -)\n", F_gotoif[F_gotoif_f-1]);
       cGen(tree->child[1]);
       printf("L%d:", P_gotoif[P_gotoif_topo--]);
-      fprintf(itmc, "(LABEL, L%d, , )\n", P_gotoif[P_gotoif_topo+1]);
+      fprintf(itmc, "(LABEL, L%d, -, -)\n", P_gotoif[P_gotoif_topo+1]);
       break;
 
     case (whileK):
       printf("L%d:", l);
-      fprintf(itmc, "(LABEL, L%d, , )\n", l);
+      fprintf(itmc, "(LABEL, L%d, -, -)\n", l);
       P_while_comeco[++P_while_comeco_topo] = l;
       l++;
       switch(tree->child[0]->attr.op){
@@ -181,14 +181,14 @@ void genStmt (TreeNode * tree, int temp){
           break;
       }
       printf("\tif t%d goto L%d\n", temp+s-1, l);
-      fprintf(itmc, "(IF, $t%d, L%d, )\n", temp+s-1, l);
+      fprintf(itmc, "(IF, $t%d, L%d, -)\n", temp+s-1, l);
       P_while_fim[++P_while_fim_topo] = l;
       l++;
       cGen(tree->child[1]);
       printf("\tgoto L%d\n", P_while_comeco[P_while_comeco_topo--]);
-      fprintf(itmc, "(GOTO, L%d, , )\n", P_while_comeco[P_while_comeco_topo+1]);
+      fprintf(itmc, "(GOTO, L%d, -, -)\n", P_while_comeco[P_while_comeco_topo+1]);
       printf("L%d:", P_while_fim[P_while_fim_topo--]);
-      fprintf(itmc, "(LABEL, L%d, , )\n", P_while_fim[P_while_fim_topo+1]);
+      fprintf(itmc, "(LABEL, L%d, -, -)\n", P_while_fim[P_while_fim_topo+1]);
       break;
 
     case (returnK):
@@ -197,7 +197,7 @@ void genStmt (TreeNode * tree, int temp){
       else
         genExp(tree->child[0], temp);
       printf("\treturn t%d\n", temp+s-1);
-      fprintf(itmc, "(RETURN, $t%d, , )\n", temp+s-1);
+      fprintf(itmc, "(RETURN, $t%d, -, -)\n", temp+s-1);
       break;
 
     case (callK):
@@ -224,7 +224,7 @@ void genStmt (TreeNode * tree, int temp){
       }
       for (i=0; i < nParam; i ++){
         printf("\tparam t%d\n", params[i]);
-        fprintf(itmc, "(PARAM, $t%d, , )\n", params[i]);
+        fprintf(itmc, "(PARAM, $t%d, -, -)\n", params[i]);
       }
       free(params);
       printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, nParam);
@@ -253,13 +253,13 @@ void genExp ( TreeNode * tree, int temp){
 
     case (constantK):
       printf("\tt%d = %d\n", temp+s, tree->attr.val);
-      fprintf(itmc, "(ASSIGN, $t%d, %d, )\n", temp+s, tree->attr.val);
+      fprintf(itmc, "(ASSIGN, $t%d, %d, -)\n", temp+s, tree->attr.val);
       s++;
       break;
 
     case (idK):
       printf("\tt%d = %s\n", temp+s, tree->attr.name);
-      fprintf(itmc, "(LOAD, $t%d, %s, )\n", temp+s, tree->attr.name);
+      fprintf(itmc, "(LOAD, $t%d, %s, -)\n", temp+s, tree->attr.name);
       s++;
       break;
 
@@ -441,8 +441,8 @@ void codeGen(TreeNode * syntaxTree)
    printf("\nCodigo de tres enderecos:\n");
    cGen(syntaxTree);
    printf("\n");
-   fprintf(itmc, "(END, %s, , )\n", funName);
-   fprintf(itmc, "(HLT, , , )\n");
+   fprintf(itmc, "(END, %s, -, -)\n", funName);
+   fprintf(itmc, "(HLT, -, -, -)\n");
    free(funName);
    fclose(itmc);
 }
