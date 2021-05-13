@@ -436,8 +436,10 @@ static void cGen( TreeNode * tree)
 void codeGen(TreeNode * syntaxTree)
 {  
    itmc = fopen("itmCode", "w");
-   if(itmc == NULL)
+   if(itmc == NULL){
     printf("\nErro ao escrever no itmc do codigo intermediario!\n");
+    return;
+   }
    printf("\nCodigo de tres enderecos:\n");
    cGen(syntaxTree);
    printf("\n");
