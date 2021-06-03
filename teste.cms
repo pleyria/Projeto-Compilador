@@ -1,11 +1,10 @@
-
-void main(void){
-	int x;
-	if (x > 2){
-		output(2);
-	}
-	else {
-		output(3);
-	}
+int fatorial(int x){
+	if(x == 0){ return 1; }
+	else { return x*fatorial(x-1); }
 }
 
+void main(void){
+	int a;
+	a = input();
+	output(fatorial(a));
+}

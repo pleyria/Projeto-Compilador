@@ -266,18 +266,24 @@ void genExp ( TreeNode * tree, int temp){
     case (operationK):
       switch (tree->attr.op){
         case (TIMES):
-          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
-            genExp(tree->child[0], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[0], temp);
-          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
-            genExp(tree->child[1], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[1], temp);
+          if(tree->child[0]->nodekind == expressionK){
+            if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+              genExp(tree->child[0], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[0], temp);
+          } else
+            genStmt(tree->child[0], temp);
+          if(tree->child[1]->nodekind == expressionK){
+            if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+              genExp(tree->child[1], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[1], temp);
+          } else
+            genStmt(tree->child[1], temp);
           printf("\tt%d = t%d * t%d\n", temp+s, pilha[topo-1], pilha[topo]);
           fprintf(itmc, "(MULT, $t%d, $t%d, $t%d)\n", temp+s, pilha[topo-1], pilha[topo]);
           topo -= 2;
@@ -286,18 +292,24 @@ void genExp ( TreeNode * tree, int temp){
           break;
 
         case (OVER):
-          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
-            genExp(tree->child[0], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[0], temp);
-          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
-            genExp(tree->child[1], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[1], temp);
+          if(tree->child[0]->nodekind == expressionK){
+            if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+              genExp(tree->child[0], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[0], temp);
+          } else
+            genStmt(tree->child[0], temp);
+          if(tree->child[1]->nodekind == expressionK){
+            if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+              genExp(tree->child[1], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[1], temp);
+          } else 
+              genStmt(tree->child[1], temp);
           printf("\tt%d = t%d / t%d\n", temp+s, pilha[topo-1], pilha[topo]);
           fprintf(itmc, "(DIV, $t%d, $t%d, $t%d)\n", temp+s, pilha[topo-1], pilha[topo]);
           topo -= 2;
@@ -306,18 +318,24 @@ void genExp ( TreeNode * tree, int temp){
           break;
 
         case (PLUS):
-          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
-            genExp(tree->child[0], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[0], temp);
-          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
-            genExp(tree->child[1], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[1], temp);
+          if(tree->child[0]->nodekind == expressionK){
+            if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+              genExp(tree->child[0], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[0], temp);
+          } else
+            genStmt(tree->child[0], temp);
+          if(tree->child[1]->nodekind == expressionK){
+            if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+              genExp(tree->child[1], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[1], temp);
+          } else
+            genStmt(tree->child[1], temp);
           printf("\tt%d = t%d + t%d\n", temp+s, pilha[topo-1], pilha[topo]);
           fprintf(itmc, "(ADD, $t%d, $t%d, $t%d)\n", temp+s, pilha[topo-1], pilha[topo]);
           topo -=2;
@@ -326,18 +344,24 @@ void genExp ( TreeNode * tree, int temp){
           break;
 
         case (MINUS):
-          if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
-            genExp(tree->child[0], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[0], temp);
-          if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
-            genExp(tree->child[1], temp);
-            pilha[++topo] = temp+s-1;
-          }
-          else
-            genExp(tree->child[1], temp);
+          if(tree->child[0]->nodekind == expressionK){
+            if(tree->child[0]->kind.exp == constantK || tree->child[0]->kind.exp == idK){
+              genExp(tree->child[0], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[0], temp);
+          } else
+            genStmt(tree->child[0], temp);
+          if(tree->child[1]->nodekind == expressionK){
+            if(tree->child[1]->kind.exp == constantK || tree->child[1]->kind.exp == idK){
+              genExp(tree->child[1], temp);
+              pilha[++topo] = temp+s-1;
+            }
+            else
+              genExp(tree->child[1], temp);
+          } else
+            genStmt(tree->child[1], temp);
           printf("\tt%d = t%d - t%d\n", temp+s, pilha[topo-1], pilha[topo]);
           fprintf(itmc, "(SUB, $t%d, $t%d, $t%d)\n", temp+s, pilha[topo-1], pilha[topo]);
           topo -= 2;
