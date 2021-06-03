@@ -56,10 +56,14 @@ static void insertNode( TreeNode * t)
       	switch (t->kind.stmt)
         { 		
 			case variableK:
-          		if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
-            		st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "variavel", "inteiro");
+          		if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1){
+                if(t->attr.len > 0) // declaracao de vetor
+                  st_insert(t->attr.name, t->lineno, location++, t->attr.scope, "vetor", "inteiro");
+                else // declaracao de variavel simples
+            		  st_insert(t->attr.name,t->lineno,location++, t->attr.scope, "variavel", "inteiro");
+              }
           		else
-            		typeError(t,"Erro 4: Declaracao invalida. Ja declarado.");	
+            		typeError(t,"Erro 4: Declaracao invalida. Ja declarado.");
             break;
 			case functionK:
 				if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
@@ -99,13 +103,13 @@ static void insertNode( TreeNode * t)
 	      	if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
 				 typeError(t,"Error 1: Nao foi declarada");
 			else
-            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "vetor", "inteiro");	
+          st_insert(t->attr.name,t->lineno,0, t->attr.scope, "vetor", "inteiro");	
 		  break;
 		  case vectorIdK:
 		  	if (st_lookup(t->attr.name, t->attr.scope) == -1 && st_lookup(t->attr.name, "global") == -1)
 				 typeError(t,"Error 1: Nao foi declarada");
 			else
-            	st_insert(t->attr.name,t->lineno,0, t->attr.scope, "indice de vetor", "inteiro");	
+        st_insert(t->attr.name,t->lineno,0, t->attr.scope, "indice de vetor", "inteiro");	
 		  case typeK:
           break;
         default:

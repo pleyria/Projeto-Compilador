@@ -1,0 +1,13 @@
+void funcaoA(int a[]){}
+
+void funcaoB(int vet[], int x, int y){
+	funcaoA(vet);
+}
+
+void main(void){
+	int vet[10];
+	int a;
+	
+	funcaoB(vet, 2, a);
+}
+

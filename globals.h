@@ -59,7 +59,6 @@ typedef enum
 /* ExpType is used for type checking */
 typedef enum
 {
-
 	voidK, integerK, booleanK
 	
 } ExpressionType;

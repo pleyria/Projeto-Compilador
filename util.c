@@ -162,7 +162,7 @@ void printTree( TreeNode * tree )
 	  	break;        
 		case returnK:
 	 	 fprintf(listing, "Return\n");
-	 	 break;        
+	 	 break;
 	        
 		default:
           fprintf(listing,"No de expressao desconhecido\n");

@@ -9,6 +9,8 @@ int st_lookup (char * name, char* scope );
 
 char* st_lookup_type(char* name, char* scope);
 
+char* st_lookup_typeID(char* name, char* scope);
+
 /* imprime o conteudo da tabela de simbolos */
 void printSymTab(FILE * listing);
 

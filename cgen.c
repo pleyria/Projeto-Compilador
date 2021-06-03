@@ -8,6 +8,7 @@ enderecos a partir da arvore de analise sintatica */
 #define TAMBYTES 4
 #define TAMPILHA 100
 #define TAMFILA 100
+#define MAXID 50
 
 void genStmt(TreeNode * tree, int temp);
 void genExp(TreeNode * tree, int temp);
@@ -49,7 +50,7 @@ static char* funName;
 /* geracao de codigo de declaracoes */
 void genStmt (TreeNode * tree, int temp){
   int h, nParam, i, v, n;
-  int * params;
+  char ** params;
   TreeNode * param;
   switch(tree->kind.stmt){
     case (assignK):
@@ -207,25 +208,43 @@ void genStmt (TreeNode * tree, int temp){
         nParam++;
         param = param->sibling;
       }
-      i = 0;
-      params = (int*) malloc(nParam * sizeof(int));
+      params = (char**) malloc(nParam * sizeof(char*));
+      for(i=0; i<nParam; i++)
+        params[i] = (char*) malloc(MAXID * sizeof(char));
       param = tree->child[0];
+      i = 0;
       while (param != NULL){
         if(param->nodekind == statementK)
           genStmt(param, temp);
-        else
-          if(param->kind.exp == constantK || param->kind.exp == idK)
+        else{
+          if(param->kind.exp == idK) // id
+            if(strcmp(st_lookup_typeID(param->attr.name, param->attr.scope), "vetor") != 0) // nao vetor
+              genExp(param, temp);
+            else{ // vetor
+              params[i] = param->attr.name;
+              i++;
+              param = param->sibling;
+              continue;
+            }
+          else // constante
             genExp(param, temp);
-          else
-            genExp(param, temp);
-        params[i] = s;
+        }
+        sprintf(params[i], "%d", s);
         i++;
         param = param->sibling;
       }
       for (i=0; i < nParam; i ++){
-        printf("\tparam t%d\n", params[i]);
-        fprintf(itmc, "(PARAM, $t%d, -, -)\n", params[i]);
+        if(params[i][0] >= 48 && params[i][0] <=57){ // temporario
+          printf("\tparam t%s\n", params[i]);
+          fprintf(itmc, "(PARAM, $t%s, -, -)\n", params[i]);
+        }
+        else { // vetor
+          printf("\tparam &%s\n", params[i]);
+          fprintf(itmc, "(PARAM, &%s, -, -)\n", params[i]);
+        }
       }
+      for(i=0; i < nParam; i++)
+        free(params[i]);
       free(params);
       printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, nParam);
       fprintf(itmc, "(CALL, $t%d, %s, %d)\n", temp+s, tree->attr.name, nParam);

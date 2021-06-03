@@ -111,6 +111,18 @@ char* st_lookup_type (char* name, char* scope)
       return l->typeData;
 }
 
+char* st_lookup_typeID (char* name, char* scope)
+{
+  int h = hash(name, scope);
+  BucketList l = hashTable[h];
+  while ((l != NULL) && (strcmp(name,l->name) != 0) && (strcmp(scope,l->scope) != 0))
+        l = l->next;
+  if (l == NULL) 
+      return "null";
+  else
+    return l->typeID;
+}
+
 
 
 void printSymTab(FILE * listing)

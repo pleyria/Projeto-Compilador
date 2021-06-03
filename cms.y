@@ -153,6 +153,7 @@ param               :   INT ident
                             $$->type = integerK;
                             $$->attr.name = "inteiro";
                             $$->child[0] = $2;
+                            $2->attr.len = 1;
 						    $2->type = integerK;
                         }
                     ;

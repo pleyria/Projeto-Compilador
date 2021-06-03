@@ -536,12 +536,12 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    25,    25,    30,    43,    48,    52,    57,    67,    79,
-      94,   108,   112,   118,   131,   136,   147,   159,   172,   176,
-     180,   184,   197,   202,   215,   220,   224,   228,   232,   236,
-     241,   245,   249,   255,   264,   271,   276,   282,   288,   293,
-     297,   305,   311,   316,   322,   328,   334,   340,   346,   353,
-     359,   364,   369,   375,   381,   386,   391,   397,   401,   405,
-     409,   414,   421,   429,   442,   447,   453
+      94,   108,   112,   118,   131,   136,   147,   160,   173,   177,
+     181,   185,   198,   203,   216,   221,   225,   229,   233,   237,
+     242,   246,   250,   256,   265,   272,   277,   283,   289,   294,
+     298,   306,   312,   317,   323,   329,   335,   341,   347,   354,
+     360,   365,   370,   376,   382,   387,   392,   398,   402,   406,
+     410,   415,   422,   430,   443,   448,   454
 };
 #endif
 
@@ -1593,13 +1593,14 @@ yyreduce:
                             yyval->type = integerK;
                             yyval->attr.name = "inteiro";
                             yyval->child[0] = yyvsp[-2];
+                            yyvsp[-2]->attr.len = 1;
 						    yyvsp[-2]->type = integerK;
                         }
-#line 1599 "cms.tab.c"
+#line 1600 "cms.tab.c"
     break;
 
   case 17:
-#line 160 "cms.y"
+#line 161 "cms.y"
                         {
                             YYSTYPE t = yyvsp[-2];
                             if(t != NULL)
@@ -1612,34 +1613,34 @@ yyreduce:
                             else
                                yyval = yyvsp[-1];
                         }
-#line 1616 "cms.tab.c"
+#line 1617 "cms.tab.c"
     break;
 
   case 18:
-#line 173 "cms.y"
+#line 174 "cms.y"
                         {
                             yyval = yyvsp[-1];
                         }
-#line 1624 "cms.tab.c"
+#line 1625 "cms.tab.c"
     break;
 
   case 19:
-#line 177 "cms.y"
+#line 178 "cms.y"
                         {
                             yyval = yyvsp[-1];
                         }
-#line 1632 "cms.tab.c"
+#line 1633 "cms.tab.c"
     break;
 
   case 20:
-#line 181 "cms.y"
+#line 182 "cms.y"
                         {
 			   			}
-#line 1639 "cms.tab.c"
+#line 1640 "cms.tab.c"
     break;
 
   case 21:
-#line 185 "cms.y"
+#line 186 "cms.y"
                         {
                             YYSTYPE t = yyvsp[-1];
                             if(t != NULL)
@@ -1652,19 +1653,19 @@ yyreduce:
                             else
                                yyval = yyvsp[0];
                         }
-#line 1656 "cms.tab.c"
+#line 1657 "cms.tab.c"
     break;
 
   case 22:
-#line 198 "cms.y"
+#line 199 "cms.y"
                         {
                             yyval = yyvsp[0];
                         }
-#line 1664 "cms.tab.c"
+#line 1665 "cms.tab.c"
     break;
 
   case 23:
-#line 203 "cms.y"
+#line 204 "cms.y"
                         {
                            YYSTYPE t = yyvsp[-1];
                            if(t != NULL)
@@ -1677,84 +1678,84 @@ yyreduce:
                            else
                              yyval = yyvsp[0];
                         }
-#line 1681 "cms.tab.c"
+#line 1682 "cms.tab.c"
     break;
 
   case 24:
-#line 216 "cms.y"
+#line 217 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1689 "cms.tab.c"
+#line 1690 "cms.tab.c"
     break;
 
   case 25:
-#line 221 "cms.y"
+#line 222 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1697 "cms.tab.c"
+#line 1698 "cms.tab.c"
     break;
 
   case 26:
-#line 225 "cms.y"
+#line 226 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1705 "cms.tab.c"
+#line 1706 "cms.tab.c"
     break;
 
   case 27:
-#line 229 "cms.y"
+#line 230 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1713 "cms.tab.c"
+#line 1714 "cms.tab.c"
     break;
 
   case 28:
-#line 233 "cms.y"
+#line 234 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1721 "cms.tab.c"
+#line 1722 "cms.tab.c"
     break;
 
   case 29:
-#line 237 "cms.y"
+#line 238 "cms.y"
                         {
                            yyval = yyvsp[0];
                         }
-#line 1729 "cms.tab.c"
+#line 1730 "cms.tab.c"
     break;
 
   case 30:
-#line 242 "cms.y"
+#line 243 "cms.y"
                         {
                            yyval = yyvsp[-1];
                         }
-#line 1737 "cms.tab.c"
+#line 1738 "cms.tab.c"
     break;
 
   case 31:
-#line 246 "cms.y"
+#line 247 "cms.y"
                         {
 						}
-#line 1744 "cms.tab.c"
+#line 1745 "cms.tab.c"
     break;
 
   case 32:
-#line 250 "cms.y"
+#line 251 "cms.y"
                         {
                              yyval = newStmtNode(ifK);
                              yyval->child[0] = yyvsp[-2];
                              yyval->child[1] = yyvsp[0];
                         }
-#line 1754 "cms.tab.c"
+#line 1755 "cms.tab.c"
     break;
 
   case 33:
-#line 256 "cms.y"
+#line 257 "cms.y"
                         {
 							 
                              yyval = newStmtNode(ifK);
@@ -1762,279 +1763,279 @@ yyreduce:
                              yyval->child[1] = yyvsp[-2];
                              yyval->child[2] = yyvsp[0];
                         }
-#line 1766 "cms.tab.c"
+#line 1767 "cms.tab.c"
     break;
 
   case 34:
-#line 265 "cms.y"
+#line 266 "cms.y"
                         {
                              yyval = newStmtNode(whileK);
                              yyval->child[0] = yyvsp[-2];
                              yyval->child[1] = yyvsp[0];
                         }
-#line 1776 "cms.tab.c"
+#line 1777 "cms.tab.c"
     break;
 
   case 35:
-#line 272 "cms.y"
+#line 273 "cms.y"
                        {
                             yyval = newStmtNode(returnK);
 							yyval->type = voidK;
                        }
-#line 1785 "cms.tab.c"
+#line 1786 "cms.tab.c"
     break;
 
   case 36:
-#line 277 "cms.y"
+#line 278 "cms.y"
                        {
                             yyval = newStmtNode(returnK);
                             yyval->child[0] = yyvsp[-1];
                        }
-#line 1794 "cms.tab.c"
+#line 1795 "cms.tab.c"
     break;
 
   case 37:
-#line 283 "cms.y"
+#line 284 "cms.y"
                        {
                             yyval = newStmtNode(assignK);
                             yyval->child[0] = yyvsp[-2];
                             yyval->child[1] = yyvsp[0];
                        }
-#line 1804 "cms.tab.c"
+#line 1805 "cms.tab.c"
     break;
 
   case 38:
-#line 289 "cms.y"
+#line 290 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1812 "cms.tab.c"
+#line 1813 "cms.tab.c"
     break;
 
   case 39:
-#line 294 "cms.y"
+#line 295 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1820 "cms.tab.c"
+#line 1821 "cms.tab.c"
     break;
 
   case 40:
-#line 298 "cms.y"
+#line 299 "cms.y"
                        {
                             yyval = yyvsp[-3];
                             yyval->child[0] = yyvsp[-1];
                             yyval->kind.exp = vectorK;
 							yyval->type = integerK;
                        }
-#line 1831 "cms.tab.c"
+#line 1832 "cms.tab.c"
     break;
 
   case 41:
-#line 306 "cms.y"
+#line 307 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
                             yyval->child[1] = yyvsp[0];
                        }
-#line 1841 "cms.tab.c"
+#line 1842 "cms.tab.c"
     break;
 
   case 42:
-#line 312 "cms.y"
+#line 313 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1849 "cms.tab.c"
+#line 1850 "cms.tab.c"
     break;
 
   case 43:
-#line 317 "cms.y"
+#line 318 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = EQ;  
 							yyval->type = booleanK;                          
                        }
-#line 1859 "cms.tab.c"
+#line 1860 "cms.tab.c"
     break;
 
   case 44:
-#line 323 "cms.y"
+#line 324 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = NE;
 							yyval->type = booleanK;                            
                        }
-#line 1869 "cms.tab.c"
+#line 1870 "cms.tab.c"
     break;
 
   case 45:
-#line 329 "cms.y"
+#line 330 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = LT;                            
 							yyval->type = booleanK;
                        }
-#line 1879 "cms.tab.c"
+#line 1880 "cms.tab.c"
     break;
 
   case 46:
-#line 335 "cms.y"
+#line 336 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = LTE;                            
 							yyval->type = booleanK;
                        }
-#line 1889 "cms.tab.c"
+#line 1890 "cms.tab.c"
     break;
 
   case 47:
-#line 341 "cms.y"
+#line 342 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = GT;                            
 							yyval->type = booleanK;
                        }
-#line 1899 "cms.tab.c"
+#line 1900 "cms.tab.c"
     break;
 
   case 48:
-#line 347 "cms.y"
+#line 348 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = GTE;                            
 							yyval->type = booleanK;
                        }
-#line 1909 "cms.tab.c"
+#line 1910 "cms.tab.c"
     break;
 
   case 49:
-#line 354 "cms.y"
+#line 355 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
                             yyval->child[1] = yyvsp[0];
                        }
-#line 1919 "cms.tab.c"
+#line 1920 "cms.tab.c"
     break;
 
   case 50:
-#line 360 "cms.y"
+#line 361 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1927 "cms.tab.c"
+#line 1928 "cms.tab.c"
     break;
 
   case 51:
-#line 365 "cms.y"
+#line 366 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = PLUS;                            
                        }
-#line 1936 "cms.tab.c"
+#line 1937 "cms.tab.c"
     break;
 
   case 52:
-#line 370 "cms.y"
+#line 371 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = MINUS;                            
                        }
-#line 1945 "cms.tab.c"
+#line 1946 "cms.tab.c"
     break;
 
   case 53:
-#line 376 "cms.y"
+#line 377 "cms.y"
                        {
                             yyval = yyvsp[-1];
                             yyval->child[0] = yyvsp[-2];
                             yyval->child[1] = yyvsp[0];
                        }
-#line 1955 "cms.tab.c"
+#line 1956 "cms.tab.c"
     break;
 
   case 54:
-#line 382 "cms.y"
+#line 383 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1963 "cms.tab.c"
+#line 1964 "cms.tab.c"
     break;
 
   case 55:
-#line 387 "cms.y"
+#line 388 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = TIMES;                            
                        }
-#line 1972 "cms.tab.c"
+#line 1973 "cms.tab.c"
     break;
 
   case 56:
-#line 392 "cms.y"
+#line 393 "cms.y"
                        {
                             yyval = newExpNode(operationK);
                             yyval->attr.op = OVER;                            
                        }
-#line 1981 "cms.tab.c"
+#line 1982 "cms.tab.c"
     break;
 
   case 57:
-#line 398 "cms.y"
+#line 399 "cms.y"
                        {
                             yyval = yyvsp[-1];
                        }
-#line 1989 "cms.tab.c"
+#line 1990 "cms.tab.c"
     break;
 
   case 58:
-#line 402 "cms.y"
+#line 403 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 1997 "cms.tab.c"
+#line 1998 "cms.tab.c"
     break;
 
   case 59:
-#line 406 "cms.y"
+#line 407 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 2005 "cms.tab.c"
+#line 2006 "cms.tab.c"
     break;
 
   case 60:
-#line 410 "cms.y"
+#line 411 "cms.y"
                        {
                             yyval = yyvsp[0];
                        }
-#line 2013 "cms.tab.c"
+#line 2014 "cms.tab.c"
     break;
 
   case 61:
-#line 415 "cms.y"
+#line 416 "cms.y"
                        {
                             yyval = yyvsp[-3];
                             yyval->child[0] = yyvsp[-1];
                             yyval->nodekind = statementK;
                             yyval->kind.stmt = callK;
                        }
-#line 2024 "cms.tab.c"
+#line 2025 "cms.tab.c"
     break;
 
   case 62:
-#line 422 "cms.y"
+#line 423 "cms.y"
                                            {
                             yyval = yyvsp[-2];
                             yyval->nodekind = statementK;
                             yyval->kind.stmt = callK;
                        }
-#line 2034 "cms.tab.c"
+#line 2035 "cms.tab.c"
     break;
 
   case 63:
-#line 430 "cms.y"
+#line 431 "cms.y"
                        {
                             YYSTYPE t = yyvsp[-2];
                              if(t != NULL)
@@ -2047,38 +2048,38 @@ yyreduce:
                              else
                                  yyval = yyvsp[0];
                         }
-#line 2051 "cms.tab.c"
+#line 2052 "cms.tab.c"
     break;
 
   case 64:
-#line 443 "cms.y"
+#line 444 "cms.y"
                         {
                              yyval = yyvsp[0];
                         }
-#line 2059 "cms.tab.c"
+#line 2060 "cms.tab.c"
     break;
 
   case 65:
-#line 448 "cms.y"
+#line 449 "cms.y"
                         {
                              yyval = newExpNode(idK);
                              yyval->attr.name = copyString(tokenString);
                         }
-#line 2068 "cms.tab.c"
+#line 2069 "cms.tab.c"
     break;
 
   case 66:
-#line 454 "cms.y"
+#line 455 "cms.y"
                         {
                              yyval = newExpNode(constantK);
                              yyval->attr.val = atoi(tokenString);
 							 yyval->type = integerK;
 						}
-#line 2078 "cms.tab.c"
+#line 2079 "cms.tab.c"
     break;
 
 
-#line 2082 "cms.tab.c"
+#line 2083 "cms.tab.c"
 
       default: break;
     }
@@ -2310,7 +2311,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 461 "cms.y"
+#line 462 "cms.y"
 
 
 int yyerror(char* message){
