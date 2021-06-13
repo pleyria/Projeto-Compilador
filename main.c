@@ -23,6 +23,7 @@ analise do codigo fonte e sintese do codigo intermediario. */
 #endif
 #endif
 #endif
+#include "assembgen.h"
 
 int lineno = 0;
 FILE * source;
@@ -40,6 +41,7 @@ int Error = FALSE;
 
 int main( int argc, char * argv[] )
 { TreeNode * syntaxTree;
+  tab_t* tab;
   char pgm[120]; 
   if (argc != 2)
     { fprintf(stderr,"usage: %s <filename>\n",argv[0]);
@@ -75,6 +77,7 @@ int main( int argc, char * argv[] )
   if (! Error)
   { 
     codeGen(syntaxTree);
+    tab = assembgen();
   }
 #endif
 #endif

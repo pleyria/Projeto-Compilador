@@ -40,7 +40,7 @@ typedef struct BucketListRec
 { 
      char* name;
      LineList lines;
-     int memloc ; 
+     int memloc; 
 	 char* scope;
 	 char* typeID;
 	 char* typeData; 
