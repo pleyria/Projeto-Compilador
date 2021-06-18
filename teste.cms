@@ -1,4 +1,5 @@
 int fatorial(int x){
+	int a;
 	if(x == 0){ return 1; }
 	else { return x*fatorial(x-1); }
 }

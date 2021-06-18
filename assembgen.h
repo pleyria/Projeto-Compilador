@@ -1,6 +1,12 @@
 #define MAXLAB 100
 #define MAXVAR 100
 
+#define OP1 43670	// operador 1
+#define OP2 43671	// operador 2
+#define STCK 43672	// topo da pilha
+
+#define STACKstart 43679
+#define TEMPstart 43690
 #define VARstart 65535
 
 // tipos de quadruplas

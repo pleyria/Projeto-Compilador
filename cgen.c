@@ -98,8 +98,12 @@ void genStmt (TreeNode * tree, int temp){
       // declaracao de parametros
       param = tree->child[0];
       while (param != NULL){
-        if (param->type == integerK)
-          fprintf(itmc, "(ARG, %s, %s, -)\n", param->child[0]->attr.name, param->attr.scope);
+        if (param->type == integerK){
+          if(!strcmp(st_lookup_typeID(param->child[0]->attr.name, param->attr.scope), "vetor")) // vetor
+            fprintf(itmc, "(ARG, %s, %s, vet)\n", param->child[0]->attr.name, param->attr.scope);
+          else
+            fprintf(itmc, "(ARG, %s, %s, int)\n", param->child[0]->attr.name, param->attr.scope); // variavel
+        }
         param = param->sibling;
       }
       cGen(tree->child[1]);
@@ -236,11 +240,11 @@ void genStmt (TreeNode * tree, int temp){
       for (i=0; i < nParam; i ++){
         if(params[i][0] >= 48 && params[i][0] <=57){ // temporario
           printf("\tparam t%s\n", params[i]);
-          fprintf(itmc, "(PARAM, $t%s, -, -)\n", params[i]);
+          fprintf(itmc, "(PARAM, $t%s, int, -)\n", params[i]);
         }
         else { // vetor
           printf("\tparam &%s\n", params[i]);
-          fprintf(itmc, "(PARAM, &%s, -, -)\n", params[i]);
+          fprintf(itmc, "(PARAM, %s, vet, -)\n", params[i]);
         }
       }
       for(i=0; i < nParam; i++)

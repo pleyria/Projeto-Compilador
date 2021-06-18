@@ -154,6 +154,33 @@ void insertVar(tab_t* tab, char* nome, char* escopo, int tam){
 	tab->endvar -= tam;
 }
 
+void updateEnd(tab_t* tab, char* nome, char* escopo){
+	int i, end;
+
+	// acha o endereco
+	for(i=0; i<tab->nVar; i++){
+		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) != 0){
+			end = tab->tab_var[i].endereco;
+		}
+	}
+	// atualiza o endereco
+	for(i=0; i<tab->nVar; i++){
+		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) == 0){
+			tab->tab_var[i].endereco = end;
+		}
+	}
+}
+
+int procuraVar(tab_t* tab, char* nome, char* escopo){
+	int i;
+
+	for(i=0; i < tab->nVar; i++)
+		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) == 0)
+			return 1;
+
+	return 0;
+}
+
 void printVar_tab(tab_t* tab){
 	int i;
 
@@ -187,7 +214,7 @@ void printLabel_tab(tab_t* tab){
 
 void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 	int i, tam, count_op = 0;
-	char labelAux[MAXLAB], nOp[MAXLAB];
+	char labelAux[MAXLAB], nOp[MAXLAB], funcat[MAXLAB];
 
 	for(i=0; i<nQuad; i++){
 		switch(tipoQuad(quad[i].campo[0])){
@@ -550,25 +577,78 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertVar(tab, quad[i].campo[1], quad[i].campo[2], tam);
 				break;
 
-			// (PARAM, $t1, -, -) ou (PARAM, &var, -, -)
+			// (PARAM, $t1, int, -) ou (PARAM, var, vet, -)
 			// empilha o conteudo de $t1 nos parametros ou
-			// empilha o endereco de var nos parametros
+			// empilha 0 se for vetor (passado por referencia)
 			case(PARAMq):
+				if(!strcmp(quad[i].campo[2], "int")){ // int
+					// carrega $t1 no acumulador
+					printf("LDA %s\n", quad[i].campo[1]); nInst++;
+				}
+				else { // vetor
+					// carrega zero no acumulador
+					printf("LDA 0\n"); nInst++;
+				}
+				// armazena acumulador na pilha
+				printf("STA [$stck]\n"); nInst++; // enderecamento indireto
+				// carrega o ponteiro de pilha no acumulador
+				printf("LDA $stck\n"); nInst++;
+				// soma 1 no acumulador
+				printf("ADD 1\n"); nInst++;
+				// armazena acumulador no ponteiro de pilha
+				printf("STA $stck\n"); nInst++;
 				break;
 
+			// (ARG, var, escopo, int) ou (ARG, var, escopo, vet)
 			case(ARGq):
+				// adiciona variavel no escopo da funcao se nao existir
+				// ja pode ter sido alocada no caso de uma chamada recursiva
+				if(!procuraVar(tab, quad[i].campo[1], quad[i].campo[2])){
+					// se for vetor insere com tamanho zero na tabela
+					// tamanho zero significa que eh um ponteiro
+					if(!strcmp(quad[i].campo[3], "vet")) // vetor
+						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 0);
+					else
+						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 1);
+				}
+				// desempilha um parametro
+				// carrega ponteiro de pilha no acumulador
+				printf("LDA $stck\n"); nInst++;
+				// subtrai um do acumulador
+				printf("SUB 1\n"); nInst++;
+				// carrega acumulador no ponteiro de pilha
+				printf("STA $stck\n"); nInst++;
+				// carrega o topo da pilha no acumulador
+				printf("LDA [$stck]\n"); nInst++; // enderecamento indireto
+				// se for variavel
+				if(!strcmp(quad[i].campo[3], "int")){
+					// armazena pilha na variavel
+					printf("STA %s\n", quad[i].campo[1]); nInst++;
+				}
+				else { // se for vetor
+					// atualiza endereco da variavel (vetor)
+					updateEnd(tab, quad[i].campo[1], quad[i].campo[2]);
+				}
 				break;
 
 			// (FUNC, tipo, nome, -)
 			// cria o label da funcao
 			case(FUNq):
-				printf("__%s\n", quad[i].campo[2]);
+				// label da funcao			
+				printf("_>%s\n", quad[i].campo[2]);
 				insertLabel(tab, quad[i].campo[2], funcao);
 				break;
 
 			// (CALL, $t1, func, nParam)
 			// $t1 = func(nParam)
 			case(CALLq):
+				strcpy(funcat, "_>");
+				strcat(funcat, quad[i].campo[2]);
+				// desvio para label da funcao
+				printf("J %s\n", funcat); nInst++;
+
+				// ainda precisa desempilhar quando voltar da funcao
+				// para pegar o resultado da chamada e armazenar em $t1
 				break;
 
 			// (RETURN, $t1, -, -)
@@ -610,14 +690,14 @@ tab_t* assembgen(void){
 	// voltar para itmCode na versao final
 
 	// pega o numero de quadruplas
-	nQuad = contaLinhas("itmCodeTeste");
+	nQuad = contaLinhas("itmCode");
 	nQuad--;
 
 	// aloca um vetor de quaruplas no tamanho certo
 	quad = (quadrupla_t*) malloc(nQuad*sizeof(quadrupla_t));
 
 	// le as quadruplas do codigo intermediario
-	readQuad(quad, nQuad, "itmCodeTeste");
+	readQuad(quad, nQuad, "itmCode");
 
 	printf("Quadruplas:\n");
 	printQuad(quad, nQuad);
