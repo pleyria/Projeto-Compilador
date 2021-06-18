@@ -34,7 +34,6 @@ typedef struct{
 	char escopo[MAXVAR];
 	int endereco;
 	int tamanho;
-	int call;
 } tab_var_t;
 
 // tabela geral

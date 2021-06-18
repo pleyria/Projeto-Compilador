@@ -137,7 +137,7 @@ void insertLabel(tab_t* tab, char* nome, tipoLabel tipo){
 	tab->tab_label[size-1].tipo = tipo;
 }
 
-void insertVar(tab_t* tab, char* nome, char* escopo, int call, int tam){
+void insertVar(tab_t* tab, char* nome, char* escopo, int tam){
 	int size;
 
 	tab->nVar++;
@@ -150,7 +150,6 @@ void insertVar(tab_t* tab, char* nome, char* escopo, int call, int tam){
 	strcpy(tab->tab_var[size-1].escopo, escopo);
 	tab->tab_var[size-1].endereco = tab->endvar;
 	tab->tab_var[size-1].tamanho = tam;
-	tab->tab_var[size-1].call = call;
 
 	tab->endvar -= tam;
 }
@@ -158,8 +157,14 @@ void insertVar(tab_t* tab, char* nome, char* escopo, int call, int tam){
 void printVar_tab(tab_t* tab){
 	int i;
 
-	for(i=0; i < tab->nVar; i++)
-		printf("%s\n", tab->tab_var[i].nome);
+	printf("  NOME      endereco      escopo      tamanho  \n");
+	printf("--------  ------------  ----------  -----------\n");
+	for(i=0; i < tab->nVar; i++){
+		printf("%8s ", tab->tab_var[i].nome);
+		printf(" %12d ", tab->tab_var[i].endereco);
+		printf(" %10s ", tab->tab_var[i].escopo);
+		printf(" %11d\n", tab->tab_var[i].tamanho);
+	}
 }
 
 void printLabel_tab(tab_t* tab){
@@ -542,8 +547,44 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(ALLOCq):
 				// adiciona a variavel na tabela
 				tam = strtoumax(quad[i].campo[3], NULL, 10);
-				if(!strcmp(quad[i].campo[2], "main"))
-					insertVar(tab, quad[i].campo[1], quad[i].campo[2], 0, tam);
+				insertVar(tab, quad[i].campo[1], quad[i].campo[2], tam);
+				break;
+
+			// (PARAM, $t1, -, -) ou (PARAM, &var, -, -)
+			// empilha o conteudo de $t1 nos parametros ou
+			// empilha o endereco de var nos parametros
+			case(PARAMq):
+				break;
+
+			case(ARGq):
+				break;
+
+			// (FUNC, tipo, nome, -)
+			// cria o label da funcao
+			case(FUNq):
+				printf("__%s\n", quad[i].campo[2]);
+				insertLabel(tab, quad[i].campo[2], funcao);
+				break;
+
+			// (CALL, $t1, func, nParam)
+			// $t1 = func(nParam)
+			case(CALLq):
+				break;
+
+			// (RETURN, $t1, -, -)
+			// empilha o resultado da funcao que eh o conteudo de $t1
+			case(RETURNq):
+				break;
+
+			// (END, func, -, -)
+			// fim da funcao func
+			case(ENDq):
+				break;
+
+			// (HLT, -, -, -)
+			// fim do programa
+			case(HLTq):
+				printf("HLT\n"); nInst++;
 				break;
 
 			default:
@@ -590,6 +631,7 @@ tab_t* assembgen(void){
 
 	printf("\nTabela de variaveis:\n");
 	printVar_tab(tab);
+	printf("\n");
 
 	for(i=0; i<nQuad; i++){
 		for(j=0; j<4; j++)
