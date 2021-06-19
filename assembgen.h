@@ -3,7 +3,15 @@
 
 #define OP1 43670	// operador 1
 #define OP2 43671	// operador 2
+
 #define STCK 43672	// topo da pilha
+
+#define PTR0 43673	// ponteiro 0
+#define PTR1 43674	// ponteiro 1
+#define PTR2 43675	// ponteiro 2
+#define PTR3 43676	// ponteiro 3
+#define PTR4 43677	// ponteiro 4
+#define PTR5 43678	// ponteiro 5
 
 #define STACKstart 43679
 #define TEMPstart 43690
@@ -44,7 +52,7 @@ typedef struct{
 
 // tabela geral
 typedef struct{
-	int nLab, nVar, endvar;
+	int nLab, nVar;
 	tab_label_t* tab_label;
 	tab_var_t* tab_var;
 } tab_t;

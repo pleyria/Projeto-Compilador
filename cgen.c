@@ -240,11 +240,11 @@ void genStmt (TreeNode * tree, int temp){
       for (i=0; i < nParam; i ++){
         if(params[i][0] >= 48 && params[i][0] <=57){ // temporario
           printf("\tparam t%s\n", params[i]);
-          fprintf(itmc, "(PARAM, $t%s, int, -)\n", params[i]);
+          fprintf(itmc, "(PARAM, $t%s, int, %s)\n", params[i], tree->child[0]->attr.scope);
         }
         else { // vetor
           printf("\tparam &%s\n", params[i]);
-          fprintf(itmc, "(PARAM, %s, vet, -)\n", params[i]);
+          fprintf(itmc, "(PARAM, %s, vet, %s)\n", params[i], tree->child[0]->attr.scope);
         }
       }
       for(i=0; i < nParam; i++)

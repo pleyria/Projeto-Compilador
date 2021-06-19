@@ -9,6 +9,8 @@
 
 /* Contadores globais para entradas das tabelas */
 int nInst = 0;
+int endvar = VARstart;
+int ptr = 0;
 
 comando_t tipoQuad(char* com){
 	if(!strcmp(com, "ASSIGN"))
@@ -137,7 +139,7 @@ void insertLabel(tab_t* tab, char* nome, tipoLabel tipo){
 	tab->tab_label[size-1].tipo = tipo;
 }
 
-void insertVar(tab_t* tab, char* nome, char* escopo, int tam){
+void insertVar(tab_t* tab, char* nome, char* escopo, int tam, int end){
 	int size;
 
 	tab->nVar++;
@@ -148,27 +150,23 @@ void insertVar(tab_t* tab, char* nome, char* escopo, int tam){
 	
 	strcpy(tab->tab_var[size-1].nome, nome);
 	strcpy(tab->tab_var[size-1].escopo, escopo);
-	tab->tab_var[size-1].endereco = tab->endvar;
+	tab->tab_var[size-1].endereco = end;
 	tab->tab_var[size-1].tamanho = tam;
-
-	tab->endvar -= tam;
 }
 
-void updateEnd(tab_t* tab, char* nome, char* escopo){
-	int i, end;
+int ehPonteiro(tab_t* tab, char* nome, char* escopo){
+	int i;
 
-	// acha o endereco
-	for(i=0; i<tab->nVar; i++){
-		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) != 0){
-			end = tab->tab_var[i].endereco;
-		}
-	}
-	// atualiza o endereco
-	for(i=0; i<tab->nVar; i++){
+	for(i=0; i < tab->nVar; i++){
 		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) == 0){
-			tab->tab_var[i].endereco = end;
+			if(tab->tab_var[i].endereco >= PTR0 && tab->tab_var[i].endereco <= PTR3)
+				return 1;
+			else
+				return 0;
 		}
 	}
+
+	return 0;
 }
 
 int procuraVar(tab_t* tab, char* nome, char* escopo){
@@ -215,6 +213,7 @@ void printLabel_tab(tab_t* tab){
 void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 	int i, tam, count_op = 0;
 	char labelAux[MAXLAB], nOp[MAXLAB], funcat[MAXLAB];
+	char escopoAtual[MAXLAB];
 
 	for(i=0; i<nQuad; i++){
 		switch(tipoQuad(quad[i].campo[0])){
@@ -541,32 +540,63 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, quad[i].campo[1], label);
 				break;
 
-			// (LOAD, $t1, var, -) ou (LOAD, $t1, var, pos)
-			// $t1 = var ou $t1 = var[pos]
+			// (LOAD, $t1, var, -) ou (LOAD, $t1, var, $t2)
+			// $t1 = var ou $t1 = var[$t2]
 			case(LOADq):
-				if(!strcmp(quad[i].campo[3], "-")) // simples
+				if(!strcmp(quad[i].campo[3], "-")){ // simples
 					// carrega var no acumulador
-					printf("LDA %s\n", quad[i].campo[2]);
-				else // vetor
-					// carrga var[pos] no acumulador
-					printf("LDA %s[%s]\n", quad[i].campo[2], quad[i].campo[3]);
-				nInst++;
-				// armazena acumulador em $t1
-				printf("STA %s\n", quad[i].campo[1]); nInst++;
+					printf("LDA %s\n", quad[i].campo[2]); nInst++;
+					// armazena acumulador em $t1
+					printf("STA %s\n", quad[i].campo[1]); nInst++;
+				}
+				else{ // vetor
+					// carrega $t2 no acumulador
+					printf("LDA %s\n", quad[i].campo[3]); nInst++;
+					// verifica se a variavel eh ponteiro
+					if(ehPonteiro(tab, quad[i].campo[2], escopoAtual)){
+						printf("ADD [%s]\n", quad[i].campo[2]); nInst++;
+					}
+					else{
+						// soma o endereco de var ao acumulador
+						printf("ADD &%s\n", quad[i].campo[1]); nInst++; // puxa o endereco da tabela
+					}
+					// armazena acumulador em $t2
+					printf("STA %s\n", quad[i].campo[3]); nInst++;
+					// carrega o endereco apontado por $t2
+					printf("LDA [%s]\n", quad[i].campo[3]); nInst++; // enderecamento indireto
+					// armazena acumulador em $t1
+					printf("STA %s\n", quad[i].campo[1]); nInst++;
+				}
 				break;
 
-			// (STORE, var, $t1, -) ou (STORE, var, %t1, pos)
-			// var = $t1 ou var[pos] = $t1
+			// (STORE, var, $t1, -) ou (STORE, var, $t1, $t2)
+			// var = $t1 ou var[$t2] = $t1
 			case(STOREq):
-				// carrega $t1 no acumulador
-				printf("LDA %s\n", quad[i].campo[2]); nInst++;
-				if(!strcmp(quad[i].campo[3], "-")) // simples
+				if(!strcmp(quad[i].campo[3], "-")){ // simples
+					// carrega $t1 no acumulador
+					printf("LDA %s\n", quad[i].campo[2]); nInst++;
 					// armazena acumulador em var
-					printf("STA %s\n", quad[i].campo[1]);
-				else // vetor
-					// armazena acumulador em var[pos]
-					printf("STA %s[%s]\n", quad[i].campo[1], quad[i].campo[3]);
-				nInst++;
+					printf("STA %s\n", quad[i].campo[1]); nInst++;
+				}
+				else{ // vetor
+					// carrega $t2 no acumulador
+					printf("LDA %s\n", quad[i].campo[3]); nInst++;
+					// verifica se a variavel eh ponteiro
+					if(ehPonteiro(tab, quad[i].campo[1], escopoAtual)){
+						// soma o endereco apontado pelo ponteiro ao acumulador
+						printf("ADD [%s]\n", quad[i].campo[1]); nInst++;
+					}
+					else{
+						// soma o endereco de var ao acumulador
+						printf("ADD &%s\n", quad[i].campo[1]); nInst++; // puxa o endereco da tabela
+					}
+					// armazena acumulador em $t2
+					printf("STA %s\n", quad[i].campo[3]); nInst++;
+					// carrega $t1 no acumulador
+					printf("LDA %s\n", quad[i].campo[2]); nInst++;
+					// armazena $t1 no endereco apontado por $t2
+					printf("STA [%s]\n", quad[i].campo[3]); nInst++; // enderecamento indireto
+				}
 				break;
 
 			// (ALLOC, var, escopo, tam)
@@ -574,20 +604,27 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(ALLOCq):
 				// adiciona a variavel na tabela
 				tam = strtoumax(quad[i].campo[3], NULL, 10);
-				insertVar(tab, quad[i].campo[1], quad[i].campo[2], tam);
+				insertVar(tab, quad[i].campo[1], quad[i].campo[2], tam, endvar);
+				endvar -= tam;
 				break;
 
-			// (PARAM, $t1, int, -) ou (PARAM, var, vet, -)
+			// (PARAM, $t1, int, escopo) ou (PARAM, var, vet, escopo)
 			// empilha o conteudo de $t1 nos parametros ou
 			// empilha 0 se for vetor (passado por referencia)
+			// escopo eh de onde os parametros saem
 			case(PARAMq):
 				if(!strcmp(quad[i].campo[2], "int")){ // int
 					// carrega $t1 no acumulador
 					printf("LDA %s\n", quad[i].campo[1]); nInst++;
 				}
 				else { // vetor
-					// carrega zero no acumulador
-					printf("LDA 0\n"); nInst++;
+					// carrega endereco no acumulador
+					if(ehPonteiro(tab, quad[i].campo[1], quad[i].campo[3])){
+						printf("LDA [%s]\n", quad[i].campo[1]); nInst++;
+					}
+					else{
+						printf("LDA &%s\n", quad[i].campo[1]); nInst++;
+					}
 				}
 				// armazena acumulador na pilha
 				printf("STA [$stck]\n"); nInst++; // enderecamento indireto
@@ -606,10 +643,14 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				if(!procuraVar(tab, quad[i].campo[1], quad[i].campo[2])){
 					// se for vetor insere com tamanho zero na tabela
 					// tamanho zero significa que eh um ponteiro
-					if(!strcmp(quad[i].campo[3], "vet")) // vetor
-						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 0);
-					else
-						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 1);
+					if(!strcmp(quad[i].campo[3], "vet")){ // vetor
+						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 1, PTR0 + ptr);
+						ptr++;
+					}
+					else{
+						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 1, endvar);
+						endvar -= 1;
+					}
 				}
 				// desempilha um parametro
 				// carrega ponteiro de pilha no acumulador
@@ -626,8 +667,9 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					printf("STA %s\n", quad[i].campo[1]); nInst++;
 				}
 				else { // se for vetor
-					// atualiza endereco da variavel (vetor)
-					updateEnd(tab, quad[i].campo[1], quad[i].campo[2]);
+					// atualiza endereco do ponteiro
+					// endereco do vetor ta no acumulador
+					printf("STA $ptr%d\n", ptr-1); nInst++;
 				}
 				break;
 
@@ -637,11 +679,33 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// label da funcao			
 				printf("_>%s\n", quad[i].campo[2]);
 				insertLabel(tab, quad[i].campo[2], funcao);
+				strcpy(escopoAtual, quad[i].campo[2]);
 				break;
 
 			// (CALL, $t1, func, nParam)
 			// $t1 = func(nParam)
 			case(CALLq):
+				// caso especial para input
+				if(!strcmp(quad[i].campo[2], "input")){
+					printf("INPUT %s\n", quad[i].campo[1]); nInst++;
+					break;
+				}
+				// caso especial para output
+				if(!strcmp(quad[i].campo[2], "output")){
+					// carrega topo da pilha
+					printf("LDA $stck\n"); nInst++;
+					// diminui topo da pilha
+					printf("SUB 1\n"); nInst++;
+					// armazena topo da pilha
+					printf("STA $stck\n");
+					// obtem numero do temporario do parametro
+					strcpy(funcat, "");
+					strcat(funcat, quad[i].campo[1] + 2*sizeof(char));
+					// chama a funcao output ja no temporario do parametro
+					printf("OUTPUT $t%d\n", atoi(funcat)-1); nInst++;
+					break;
+				}
+				// funcoes definidas pelo usuario
 				strcpy(funcat, "_>");
 				strcat(funcat, quad[i].campo[2]);
 				// desvio para label da funcao
@@ -684,7 +748,6 @@ tab_t* assembgen(void){
 	tab->nVar = 0;
 	tab->tab_var = NULL;
 	tab->tab_label = NULL;
-	tab->endvar = VARstart;
 
 	// estou usando itmCodeTeste para testar as quadruplas
 	// voltar para itmCode na versao final
@@ -704,6 +767,8 @@ tab_t* assembgen(void){
 	printf("\n");
 
 	printf("Codigo Assembly:\n");
+	// comeca a execucao na funcao main
+	printf("J _>main\n");
 	genAsemb(quad, nQuad, tab);
 
 	printf("\nTabela de labels:\n");

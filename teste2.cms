@@ -1,13 +1,17 @@
-void funcaoA(int a[]){}
+int funcaoB(int arranjo[]){
+	int x;
+	
+	x = arranjo[2];
+}
 
-void funcaoB(int vet[], int x, int y){
-	funcaoA(vet);
+int funcaoA(int vetor[]){
+	funcaoB(vetor);
 }
 
 void main(void){
-	int vet[10];
-	int a;
+	int array[10];
+	int x; int y;
 	
-	funcaoB(vet, 2, a);
+	funcaoA(array);
 }
 
