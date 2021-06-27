@@ -1,17 +1,10 @@
-int funcaoB(int arranjo[]){
-	int x;
-	
-	x = arranjo[2];
-}
-
-int funcaoA(int vetor[]){
-	funcaoB(vetor);
+int soma(int x){
+	if(x == 1) return 1;
+	return x + soma(x-1);
 }
 
 void main(void){
-	int array[10];
-	int x; int y;
+	int a;
 	
-	funcaoA(array);
+	soma(a);
 }
-

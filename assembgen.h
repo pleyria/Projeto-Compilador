@@ -1,19 +1,23 @@
 #define MAXLAB 100
 #define MAXVAR 100
+#define MAXTEMP 50
 
 #define OP1 43670	// operador 1
 #define OP2 43671	// operador 2
 
 #define STCK 43672	// topo da pilha
+#define STCK2 43673	// topo da pilha 2
 
-#define PTR0 43673	// ponteiro 0
-#define PTR1 43674	// ponteiro 1
-#define PTR2 43675	// ponteiro 2
-#define PTR3 43676	// ponteiro 3
-#define PTR4 43677	// ponteiro 4
-#define PTR5 43678	// ponteiro 5
+#define ret 43674	// retorno
 
-#define STACKstart 43679
+#define PTR0 43675	// ponteiro 0
+#define PTR1 43676	// ponteiro 1
+#define PTR2 43677	// ponteiro 2
+#define PTR3 43678	// ponteiro 3
+#define PTR4 43679	// ponteiro 4
+
+#define STACK2start 21845
+#define STACKstart 43669
 #define TEMPstart 43690
 #define VARstart 65535
 

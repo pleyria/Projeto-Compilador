@@ -252,6 +252,7 @@ void genStmt (TreeNode * tree, int temp){
       free(params);
       printf("\tt%d = call %s, %d\n", temp+s, tree->attr.name, nParam);
       fprintf(itmc, "(CALL, $t%d, %s, %d)\n", temp+s, tree->attr.name, nParam);
+      pilha[topo] = temp+s; // adicionei isso aq dps (acompanhar para ver se n zuou tudo)
       s++;
       break;
 
