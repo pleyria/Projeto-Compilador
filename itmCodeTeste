@@ -1,5 +1,1 @@
-(ALLOC, x, fA, 1)
-(ALLOC, a, fA, 1)
-(ALLOC, b, fA, 1)
-(FUN, int, fB, -)
-(ARG, x, fB, vet)
+(DIV, $t3, $t1, $t2)

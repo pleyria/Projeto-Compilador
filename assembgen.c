@@ -436,18 +436,18 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("STA $op2\n");
 				fprintf(assemb, "STA $op2\n"); nInst++;
 				// label de inicio
-				printf("_.start%d\n", count_op);
-				fprintf(assemb, "_.start%d\n", count_op); nInst++;
+				printf(".start%d\n", count_op);
+				fprintf(assemb, ".start%d\n", count_op); nInst++;
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.start");
+				strcpy(labelAux, ".start");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega $op2 no acumulador
 				printf("LDA $op2\n"); 
 				fprintf(assemb, "LDA $op2\n"); nInst++;
 				// desvio para label de fim se acumulador for zero
-				printf("JZ _.end%d\n", count_op);
-				fprintf(assemb, "JZ _.end%d\n", count_op); nInst++;
+				printf("JZ .end%d\n", count_op);
+				fprintf(assemb, "JZ .end%d\n", count_op); nInst++;
 				// AND bit a bit com acumulador e 1
 				printf("AND 1\n");
 				fprintf(assemb, "AND 1\n"); nInst++;
@@ -455,8 +455,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB 1\n");
 				fprintf(assemb, "SUB 1\n"); nInst++;
 				// desvio para label de skip se acumulador for negativo
-				printf("JN _.skip%d\n", count_op);
-				fprintf(assemb, "JN _.skip%d\n", count_op); nInst++;
+				printf("JN .skip%d\n", count_op);
+				fprintf(assemb, "JN .skip%d\n", count_op); nInst++;
 				// carrega $t3 no acumulador
 				printf("LDA %s\n", quad[i].campo[1]);
 				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
@@ -464,10 +464,10 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("ADD $op1\n");
 				fprintf(assemb, "ADD $op1\n"); nInst++;
 				// label de skip
-				printf("_.skip%d\n", count_op);
-				fprintf(assemb, "_.skip%d\n", count_op);
+				printf(".skip%d\n", count_op);
+				fprintf(assemb, ".skip%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.skip");
+				strcpy(labelAux, ".skip");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega $op1 no acumulador
@@ -489,13 +489,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("STA $op2\n");
 				fprintf(assemb, "STA $op2\n"); nInst++;
 				// desvio para o inicio
-				printf("J _.start%d\n", count_op);
-				fprintf(assemb, "J _.start%d\n", count_op); nInst++;
+				printf("J .start%d\n", count_op);
+				fprintf(assemb, "J .start%d\n", count_op); nInst++;
 				// label de fim
-				printf("_.end%d\n", count_op);
-				fprintf(assemb, "_.end%d\n", count_op);
+				printf(".end%d\n", count_op);
+				fprintf(assemb, ".end%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.end");
+				strcpy(labelAux, ".end");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				count_op++;
@@ -505,6 +505,206 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			// (DIV, $t3, $t1, $t2)
 			// $t3 = $t1 / $t2
 			case(DIVq):
+				/* inicializacao do quociente */
+				// carrega 0 no acumulador
+				printf("LDA 0\n");
+				fprintf(assemb, "LDA 0\n"); nInst++;
+				// armazena em $t3
+				printf("STA %s\n", quad[i].campo[1]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+
+				/* obtencao do sinal de $t1 em $op1 (0 = +, 1 = -) */
+				// carrega $t1 no acumulador
+				printf("LDA %s\n", quad[i].campo[2]);
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				// desvio se for negativo
+				printf("JN .1stnegative%d\n", count_op);
+				fprintf(assemb, "JN .1stnegative%d\n", count_op); nInst++;
+				// carrega 0 no acumulador
+				printf("LDA 0\n");
+				fprintf(assemb, "LDA 0\n"); nInst++;
+				// desvio para label positivo
+				printf("J .1stpositive%d\n", count_op);
+				fprintf(assemb, "J .1stpositive%d\n", count_op); nInst++;
+				// label de negativo
+				printf(".1stnegative%d\n", count_op);
+				fprintf(assemb, ".1stnegative%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".1stnegative");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				/* pega o modulo de $t1 */
+				// inverte os bits de $t1
+				printf("NOT\n");
+				fprintf(assemb, "NOT\n"); nInst++;
+				// adiciona 1
+				printf("ADD 1\n");
+				fprintf(assemb, "ADD 1\n"); nInst++;
+				// armazena em $t1
+				printf("STA %s\n", quad[i].campo[2]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst++;
+				// carrega 1 no acumulador
+				printf("LDA 1\n");
+				fprintf(assemb, "LDA 1\n"); nInst++;
+				// label de positivo
+				printf(".1stpositive%d\n", count_op);
+				fprintf(assemb, ".1stpositive%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".1stpositive");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				// armazena em $op1
+				printf("STA $op1\n");
+				fprintf(assemb, "STA $op1\n"); nInst++;
+
+
+				/* obtencao do sinal de $t2 em $op2 (0 = +, 1 = -) */
+				// carrega $t2 no acumulador
+				printf("LDA %s\n", quad[i].campo[3]);
+				fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst++;
+				// desvio se for negativo
+				printf("JN .2ndnegative%d\n", count_op);
+				fprintf(assemb, "JN .2ndnegative%d\n", count_op); nInst++;
+				// carrega 0 no acumulador
+				printf("LDA 0\n");
+				fprintf(assemb, "LDA 0\n"); nInst++;
+				// desvio para label positivo
+				printf("J .2ndpositive%d\n", count_op);
+				fprintf(assemb, "J .2ndpositive%d\n", count_op); nInst++;
+				// label de negativo
+				printf(".2ndnegative%d\n", count_op);
+				fprintf(assemb, ".2ndnegative%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".2ndnegative");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				/* pega o modulo de $t2 */
+				// inverte os bits de $t1
+				printf("NOT\n");
+				fprintf(assemb, "NOT\n"); nInst++;
+				// adiciona 1
+				printf("ADD 1\n");
+				fprintf(assemb, "ADD 1\n"); nInst++;
+				// armazena em $t2
+				printf("STA %s\n", quad[i].campo[3]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst++;
+				// carrega 1 no acumulador
+				printf("LDA 1\n");
+				fprintf(assemb, "LDA 1\n"); nInst++;
+				// label de positivo
+				printf(".2ndpositive%d\n", count_op);
+				fprintf(assemb, ".2ndpositive%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".2ndpositive");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				// armazena em $op1
+				printf("STA $op2\n");
+				fprintf(assemb, "STA $op2\n"); nInst++;
+
+				/* verifica se os sinais de $t1 e $t2 sao iguais e armazena em $op1 (0 =, 1 !=)*/
+				// $op2 ja esta no acumulador
+				// subtrai $op1
+				printf("SUB $op1\n");
+				fprintf(assemb, "SUB $op1\n"); nInst++;
+				// desvio se for zero
+				printf("JZ .igual%d\n", count_op);
+				fprintf(assemb, "JZ .igual%d\n", count_op); nInst++;
+				// carrega 1 no acumulador
+				printf("LDA 1\n");
+				fprintf(assemb, "LDA 1\n"); nInst++;
+				// desvio para label de diferente
+				printf("J .dif%d\n", count_op);
+				fprintf(assemb, "J .dif%d\n", count_op); nInst++;
+				// label de igual
+				printf(".igual%d\n", count_op);
+				fprintf(assemb, ".igual%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".igual");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				// carrega 0 no acumulador
+				printf("LDA 0\n");
+				fprintf(assemb, "LDA 0\n"); nInst++;
+				// label de diferente
+				printf(".dif%d\n", count_op);
+				fprintf(assemb, ".dif%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".dif");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				// armazena em $op1
+				printf("STA $op2\n");
+				fprintf(assemb, "STA $op2\n"); nInst++;
+
+				/* realiza o algoritmo de divisao com os valores absolutos de $t1 e $t2 */
+				// label de inicio
+				printf(".start%d\n", count_op);
+				fprintf(assemb, ".start%d\n", count_op); nInst++;
+				sprintf(nOp, "%d", count_op);
+				strcpy(labelAux, ".start");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				// carrega $t1
+				printf("LDA %s\n", quad[i].campo[2]);
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				// subtrai $t2
+				printf("SUB %s\n", quad[i].campo[3]);
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				// desvio para label de fim se for negativo
+				printf("JN .end\n");
+				fprintf(assemb, "JN .end\n"); nInst++;
+				// armazena em $t1
+				printf("STA %s\n", quad[i].campo[2]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst++;
+				// carrega $t3 no acumulador
+				printf("LDA %s\n", quad[i].campo[1]);
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				// adiciona 1
+				printf("ADD 1\n");
+				fprintf(assemb, "ADD 1\n"); nInst++;
+				// armazena em $t3
+				printf("STA %s\n", quad[i].campo[1]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				// desvio para label de inicio
+				printf("J .start%d\n", count_op);
+				fprintf(assemb, "J .start%d\n", count_op); nInst++;
+				// label de fim
+				printf(".end%d\n", count_op);
+				fprintf(assemb, ".end%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".end");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+
+				/* inverte o sinal do quociente se $t1 e $t2 tiverem sinais opostos */
+				// carrega $op1 no acumulador
+				printf("LDA $op1\n");
+				fprintf(assemb, "LDA $op1\n"); nInst++;
+				// desvio para label de skip se for zero (sinais iguais)
+				printf("JZ .skip%d\n", count_op);
+				fprintf(assemb, "J .skip%d\n", count_op); nInst++;
+				// carrega $t3
+				printf("LDA %s\n", quad[i].campo[1]);
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				// inverte os bits de $t3
+				printf("NOT\n");
+				fprintf(assemb, "NOT\n"); nInst++;
+				// adiciona 1
+				printf("ADD 1\n");
+				fprintf(assemb, "ADD 1\n"); nInst++;
+				// armazena em $t3
+				printf("STA %s\n", quad[i].campo[1]);
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+
+				// label de skip
+				printf(".skip%d\n", count_op);
+				fprintf(assemb, ".skip%d\n", count_op);
+				sprintf(nOp,"%d", count_op);
+				strcpy(labelAux, ".skip");
+				strcat(labelAux, nOp);
+				insertLabel(tab, labelAux, label);
+				count_op++;
 				startParam = 0;
 				break;
 
@@ -518,29 +718,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB %s\n", quad[i].campo[3]);
 				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
 				// desvio para label de falso
-				printf("JN _.false%d\n", count_op);
-				fprintf(assemb, "JN _.false%d\n", count_op); nInst++;
+				printf("JN .false%d\n", count_op);
+				fprintf(assemb, "JN .false%d\n", count_op); nInst++;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// desvio para label de verdadeiro
-				printf("J _.true%d\n", count_op);
-				fprintf(assemb, "J _.true%d\n", count_op); nInst++;
+				printf("J .true%d\n", count_op);
+				fprintf(assemb, "J .true%d\n", count_op); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -563,29 +763,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB 1\n");
 				fprintf(assemb, "SUB 1\n"); nInst++;
 				// desvio para label de falso
-				printf("JN _.false%d\n", count_op);
-				fprintf(assemb, "JN _.false%d\n", count_op); nInst++;
+				printf("JN .false%d\n", count_op);
+				fprintf(assemb, "JN .false%d\n", count_op); nInst++;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// desvio para label de verdadeiro
-				printf("J _.true%d\n", count_op);
-				fprintf(assemb, "J _.true%d\n", count_op); nInst++;
+				printf("J .true%d\n", count_op);
+				fprintf(assemb, "J .true%d\n", count_op); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -608,29 +808,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB 1\n");
 				fprintf(assemb, "SUB 1\n"); nInst++;
 				// desvio para label de verdadeiro
-				printf("JN _.true%d\n", count_op);
-				fprintf(assemb, "JN _.true%d\n", count_op); nInst++;
+				printf("JN .true%d\n", count_op);
+				fprintf(assemb, "JN .true%d\n", count_op); nInst++;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// desvio para label de falso
-				printf("J _.false%d\n", count_op);
-				fprintf(assemb, "J _.false%d\n", count_op); nInst++;
+				printf("J .false%d\n", count_op);
+				fprintf(assemb, "J .false%d\n", count_op); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -650,29 +850,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB %s\n", quad[i].campo[3]);
 				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
 				// desvio para label de verdadeiro
-				printf("JN _.true%d\n", count_op);
-				fprintf(assemb, "JN _.true%d\n", count_op); nInst++;
+				printf("JN .true%d\n", count_op);
+				fprintf(assemb, "JN .true%d\n", count_op); nInst++;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// desvio para label de falso
-				printf("J _.false%d\n", count_op);
-				fprintf(assemb, "J _.false%d\n", count_op); nInst++;
+				printf("J .false%d\n", count_op);
+				fprintf(assemb, "J .false%d\n", count_op); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -692,29 +892,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB %s\n", quad[i].campo[3]);
 				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
 				// desvio para label de verdadeiro
-				printf("JZ _.true%d\n", count_op);
-				fprintf(assemb, "JZ _.true%d\n", count_op); nInst++;
+				printf("JZ .true%d\n", count_op);
+				fprintf(assemb, "JZ .true%d\n", count_op); nInst++;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// desvio para label de falso
-				printf("J _.false%d\n", count_op);
-				fprintf(assemb, "J _.false%d\n", count_op); nInst++;
+				printf("J .false%d\n", count_op);
+				fprintf(assemb, "J .false%d\n", count_op); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -734,29 +934,29 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("SUB %s\n", quad[i].campo[3]);
 				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
 				// desvio para label de falso
-				printf("JZ _.false%d\n", count_op);
-				fprintf(assemb, "JZ _.false%d\n", count_op); nInst++;
+				printf("JZ .false%d\n", count_op);
+				fprintf(assemb, "JZ .false%d\n", count_op); nInst++;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
 				fprintf(assemb, "LDA 1\n"); nInst++;
 				// desvio para label de verdadeiro
-				printf("J _.true%d\n", count_op);
-				fprintf(assemb, "J _.true%d\n", count_op); nInst++;
+				printf("J .true%d\n", count_op);
+				fprintf(assemb, "J .true%d\n", count_op); nInst++;
 				// label de falso
-				printf("_.false%d\n", count_op);
-				fprintf(assemb, "_.false%d\n", count_op);
+				printf(".false%d\n", count_op);
+				fprintf(assemb, ".false%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.false");
+				strcpy(labelAux, ".false");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
 				fprintf(assemb, "LDA 0\n"); nInst++;
 				// label de verdadeiro
-				printf("_.true%d\n", count_op);
-				fprintf(assemb, "_.true%d\n", count_op);
+				printf(".true%d\n", count_op);
+				fprintf(assemb, ".true%d\n", count_op);
 				sprintf(nOp,"%d", count_op);
-				strcpy(labelAux, "_.true");
+				strcpy(labelAux, ".true");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
@@ -796,7 +996,9 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// label
 				printf("_%s\n", quad[i].campo[1]);
 				fprintf(assemb, "_%s\n", quad[i].campo[1]);
-				insertLabel(tab, quad[i].campo[1], label);
+				strcpy(labelAux, "_");
+				strcat(labelAux, quad[i].campo[1]);
+				insertLabel(tab, labelAux, label);
 				startParam = 0;
 				break;
 
@@ -981,9 +1183,11 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			// cria o label da funcao
 			case(FUNq):
 				// label da funcao			
-				printf("_>%s\n", quad[i].campo[2]);
-				fprintf(assemb, "_>%s\n", quad[i].campo[2]);
-				insertLabel(tab, quad[i].campo[2], funcao);
+				printf(">%s\n", quad[i].campo[2]);
+				fprintf(assemb, ">%s\n", quad[i].campo[2]);
+				strcpy(labelAux, ">");
+				strcat(labelAux, quad[i].campo[2]);
+				insertLabel(tab, labelAux, funcao);
 				strcpy(escopoAtual, quad[i].campo[2]);
 				startParam = 0;
 				break;
@@ -1034,17 +1238,17 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("STA $stck2\n");
 				fprintf(assemb, "STA $stck2\n"); nInst++;
 
-				strcpy(funcat, "_>");
+				strcpy(funcat, ">");
 				strcat(funcat, quad[i].campo[2]);
 				// desvio para label da funcao
 				printf("J %s\n", funcat);
 				fprintf(assemb, "J %s\n", funcat); nInst++;
 
 				// insere label de retorno da chamada
-				printf("_<call%d\n", call);
-				fprintf(assemb, "_<call%d\n", call); call++;
+				printf("<call%d\n", call);
+				fprintf(assemb, "<call%d\n", call); call++;
 				sprintf(nOp,"%d", call-1);
-				strcpy(labelAux, "_<call");
+				strcpy(labelAux, "<call");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, funcao);
 				
@@ -1166,8 +1370,8 @@ tab_t* assembgen(void){
 
 	printf("Codigo Assembly:\n");
 	// comeca a execucao na funcao main
-	printf("J _>main\n"); nInst++;
-	fprintf(assemb, "J _>main\n");
+	printf("J >main\n"); nInst++;
+	fprintf(assemb, "J >main\n");
 	genAsemb(quad, nQuad, tab);
 
 	fclose(assemb);
