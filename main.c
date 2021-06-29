@@ -24,6 +24,7 @@ analise do codigo fonte e sintese do codigo intermediario. */
 #endif
 #endif
 #include "assembgen.h"
+#include "bingen.h"
 
 int lineno = 0;
 FILE * source;
@@ -78,6 +79,7 @@ int main( int argc, char * argv[] )
   { 
     codeGen(syntaxTree);
     tab = assembgen();
+    bingen(tab);
   }
 #endif
 #endif

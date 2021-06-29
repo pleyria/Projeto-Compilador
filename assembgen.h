@@ -1,3 +1,6 @@
+#define MAX_LINHA 200
+#define MAX_CAMPO 50
+
 #define MAXLAB 100
 #define MAXVAR 100
 #define MAXTEMP 50
@@ -62,3 +65,5 @@ typedef struct{
 } tab_t;
 
 tab_t* assembgen(void);
+
+int contaLinhas(char* arquivo);

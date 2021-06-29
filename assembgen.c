@@ -4,9 +4,6 @@
 #include <inttypes.h>
 #include "assembgen.h"
 
-#define MAX_LINHA 200
-#define MAX_CAMPO 50
-
 /* arquvio para escrita do codigo intermediario */
 static FILE* assemb;
 
@@ -240,19 +237,19 @@ void salvaEstado(tab_t* tab, quadrupla_t* quad, int nQuad, char* funcao, int tem
 		if(!strcmp(funcao, tab->tab_var[i].escopo) && !ehPonteiro(tab, tab->tab_var[i].nome, funcao)){
 			// carrega variavel no acumulador
 			printf("LDA %s\n", tab->tab_var[i].nome);
-			fprintf(assemb, "LDA %s\n", tab->tab_var[i].nome); nInst++;
+			fprintf(assemb, "LDA %s\n", tab->tab_var[i].nome); nInst += 2;
 			// armazena acumulador na pilha
 			printf("STA [$stck]\n");
-			fprintf(assemb, "STA [$stck]\n"); nInst++; // enderecamento indireto
+			fprintf(assemb, "STA [$stck]\n"); nInst += 2; // enderecamento indireto
 			// carrega o ponteiro de pilha no acumulador
 			printf("LDA $stck\n");
-			fprintf(assemb, "LDA $stck\n"); nInst++;
+			fprintf(assemb, "LDA $stck\n"); nInst += 2;
 			// soma 1 no acumulador
 			printf("ADD 1\n");
-			fprintf(assemb, "ADD 1\n"); nInst++;
+			fprintf(assemb, "ADD 1\n"); nInst += 2;
 			// armazena acumulador no ponteiro de pilha
 			printf("STA $stck\n");
-			fprintf(assemb, "STA $stck\n"); nInst++;
+			fprintf(assemb, "STA $stck\n"); nInst += 2;
 		}
 	}
 
@@ -289,19 +286,19 @@ void salvaEstado(tab_t* tab, quadrupla_t* quad, int nQuad, char* funcao, int tem
 	while(tempv[i] != -1){
 		// carrega temporario no acumulador
 		printf("LDA $t%d\n", tempv[i]);
-		fprintf(assemb, "LDA $t%d\n", tempv[i]); nInst++;
+		fprintf(assemb, "LDA $t%d\n", tempv[i]); nInst += 2;
 		// armazena acumulador na pilha
 		printf("STA [$stck]\n");
-		fprintf(assemb, "STA [$stck]\n"); nInst++; // enderecamento indireto
+		fprintf(assemb, "STA [$stck]\n"); nInst += 2; // enderecamento indireto
 		// carrega o ponteiro de pilha no acumulador
 		printf("LDA $stck\n");
-		fprintf(assemb, "LDA $stck\n"); nInst++;
+		fprintf(assemb, "LDA $stck\n"); nInst += 2;
 		// soma 1 no acumulador
 		printf("ADD 1\n");
-		fprintf(assemb, "ADD 1\n"); nInst++;
+		fprintf(assemb, "ADD 1\n"); nInst += 2;
 		// armazena acumulador no ponteiro de pilha
 		printf("STA $stck\n");
-		fprintf(assemb, "STA $stck\n"); nInst++;
+		fprintf(assemb, "STA $stck\n"); nInst += 2;
 		i++;
 	}
 
@@ -322,19 +319,19 @@ void carregaEstado(tab_t* tab, char* funcao, int tempv[]){
 	while(i >= 0){
 		// carrega ponteiro de pilha no acumulador
 		printf("LDA $stck\n");
-		fprintf(assemb, "LDA $stck\n"); nInst++;
+		fprintf(assemb, "LDA $stck\n"); nInst += 2;
 		// subtrai um do acumulador
 		printf("SUB 1\n");
-		fprintf(assemb, "SUB 1\n"); nInst++;
+		fprintf(assemb, "SUB 1\n"); nInst += 2;
 		// carrega acumulador no ponteiro de pilha
 		printf("STA $stck\n");
-		fprintf(assemb, "STA $stck\n"); nInst++;
+		fprintf(assemb, "STA $stck\n"); nInst += 2;
 		// carrega o topo da pilha no acumulador
 		printf("LDA [$stck]\n");
-		fprintf(assemb, "LDA [$stck]\n"); nInst++; // enderecamento indireto
+		fprintf(assemb, "LDA [$stck]\n"); nInst += 2; // enderecamento indireto
 		// armazena o acumulador no temporario
 		printf("STA $t%d\n", tempv[i]);
-		fprintf(assemb, "STA $t%d\n", tempv[i]); nInst++;
+		fprintf(assemb, "STA $t%d\n", tempv[i]); nInst += 2;
 
 		i--;
 	}
@@ -344,19 +341,19 @@ void carregaEstado(tab_t* tab, char* funcao, int tempv[]){
 		if(!strcmp(funcao, tab->tab_var[i].escopo) && !ehPonteiro(tab, tab->tab_var[i].nome, funcao)){
 			// carrega ponteiro de pilha no acumulador
 			printf("LDA $stck\n");
-			fprintf(assemb, "LDA $stck\n"); nInst++;
+			fprintf(assemb, "LDA $stck\n"); nInst += 2;
 			// subtrai um do acumulador
 			printf("SUB 1\n");
-			fprintf(assemb, "SUB 1\n"); nInst++;
+			fprintf(assemb, "SUB 1\n"); nInst += 2;
 			// carrega acumulador no ponteiro de pilha
 			printf("STA $stck\n");
-			fprintf(assemb, "STA $stck\n"); nInst++;
+			fprintf(assemb, "STA $stck\n"); nInst += 2;
 			// carrega o topo da pilha no acumulador
 			printf("LDA [$stck]\n");
-			fprintf(assemb, "LDA [$stck]\n"); nInst++; // enderecamento indireto
+			fprintf(assemb, "LDA [$stck]\n"); nInst += 2; // enderecamento indireto
 			// armazena o acumulador na variavel
 			printf("STA %s\n", tab->tab_var[i].nome);
-			fprintf(assemb, "STA %s\n", tab->tab_var[i].nome); nInst++;
+			fprintf(assemb, "STA %s\n", tab->tab_var[i].nome); nInst += 2;
 		}
 	}
 }
@@ -377,10 +374,10 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(ASSIGNq):
 				// carrega im no acumualdor
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// armazena conteudo do acumulador no temporario
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -389,13 +386,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(ADDq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// soma conteudo do acumulador com $t2
 				printf("ADD %s\n", quad[i].campo[3]);
-				fprintf(assemb, "ADD %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "ADD %s\n", quad[i].campo[3]); nInst += 2;
 				// armazena conteudo do acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -404,13 +401,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(SUBq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai conteudo do acumulador com $t2
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// armazena conteudo do acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -419,50 +416,50 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(MULTq):
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// armazena conteudo do acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// armazena o conteudo do acumulador em $op1
 				printf("STA $op1\n");
-				fprintf(assemb, "STA $op1\n"); nInst++;
+				fprintf(assemb, "STA $op1\n"); nInst += 2;
 				// carrega $t2 no acumulador
 				printf("LDA %s\n", quad[i].campo[3]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst += 2;
 				// armazena o conteudo do acumulador em $op2
 				printf("STA $op2\n");
-				fprintf(assemb, "STA $op2\n"); nInst++;
+				fprintf(assemb, "STA $op2\n"); nInst += 2;
 				// label de inicio
 				printf(".start%d\n", count_op);
-				fprintf(assemb, ".start%d\n", count_op); nInst++;
+				fprintf(assemb, ".start%d\n", count_op); nInst += 2;
 				sprintf(nOp,"%d", count_op);
 				strcpy(labelAux, ".start");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega $op2 no acumulador
 				printf("LDA $op2\n"); 
-				fprintf(assemb, "LDA $op2\n"); nInst++;
+				fprintf(assemb, "LDA $op2\n"); nInst += 2;
 				// desvio para label de fim se acumulador for zero
 				printf("JZ .end%d\n", count_op);
-				fprintf(assemb, "JZ .end%d\n", count_op); nInst++;
+				fprintf(assemb, "JZ .end%d\n", count_op); nInst += 2;
 				// AND bit a bit com acumulador e 1
 				printf("AND 1\n");
-				fprintf(assemb, "AND 1\n"); nInst++;
+				fprintf(assemb, "AND 1\n"); nInst += 2;
 				// subtrai 1 do acumulador
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// desvio para label de skip se acumulador for negativo
 				printf("JN .skip%d\n", count_op);
-				fprintf(assemb, "JN .skip%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .skip%d\n", count_op); nInst += 2;
 				// carrega $t3 no acumulador
 				printf("LDA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				// soma $op1 ao acumulador
 				printf("ADD $op1\n");
-				fprintf(assemb, "ADD $op1\n"); nInst++;
+				fprintf(assemb, "ADD $op1\n"); nInst += 2;
 				// label de skip
 				printf(".skip%d\n", count_op);
 				fprintf(assemb, ".skip%d\n", count_op);
@@ -472,25 +469,25 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega $op1 no acumulador
 				printf("LDA $op1\n");
-				fprintf(assemb, "LDA $op1\n"); nInst++;
+				fprintf(assemb, "LDA $op1\n"); nInst += 2;
 				// desloca acumulador para esquerda
 				printf("SHL\n");
-				fprintf(assemb, "SHL\n"); nInst++;
+				fprintf(assemb, "SHL\n"); nInst ++;
 				// armazena acumulador em $op1
 				printf("STA $op1\n");
-				fprintf(assemb, "STA $op1\n"); nInst++;
+				fprintf(assemb, "STA $op1\n"); nInst += 2;
 				// carrega $op2 no acumulador
 				printf("LDA $op2\n");
-				fprintf(assemb, "LDA $op2\n"); nInst++;
+				fprintf(assemb, "LDA $op2\n"); nInst += 2;
 				// desloca acumulador para direita
 				printf("SHR\n");
-				fprintf(assemb, "SHR\n"); nInst++;
+				fprintf(assemb, "SHR\n"); nInst ++;
 				// armazena acumulador em $op2
 				printf("STA $op2\n");
-				fprintf(assemb, "STA $op2\n"); nInst++;
+				fprintf(assemb, "STA $op2\n"); nInst += 2;
 				// desvio para o inicio
 				printf("J .start%d\n", count_op);
-				fprintf(assemb, "J .start%d\n", count_op); nInst++;
+				fprintf(assemb, "J .start%d\n", count_op); nInst += 2;
 				// label de fim
 				printf(".end%d\n", count_op);
 				fprintf(assemb, ".end%d\n", count_op);
@@ -508,24 +505,24 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				/* inicializacao do quociente */
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// armazena em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 
 				/* obtencao do sinal de $t1 em $op1 (0 = +, 1 = -) */
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// desvio se for negativo
 				printf("JN .1stnegative%d\n", count_op);
-				fprintf(assemb, "JN .1stnegative%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .1stnegative%d\n", count_op); nInst += 2;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// desvio para label positivo
 				printf("J .1stpositive%d\n", count_op);
-				fprintf(assemb, "J .1stpositive%d\n", count_op); nInst++;
+				fprintf(assemb, "J .1stpositive%d\n", count_op); nInst += 2;
 				// label de negativo
 				printf(".1stnegative%d\n", count_op);
 				fprintf(assemb, ".1stnegative%d\n", count_op);
@@ -539,13 +536,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				fprintf(assemb, "NOT\n"); nInst++;
 				// adiciona 1
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena em $t1
 				printf("STA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// label de positivo
 				printf(".1stpositive%d\n", count_op);
 				fprintf(assemb, ".1stpositive%d\n", count_op);
@@ -555,22 +552,22 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena em $op1
 				printf("STA $op1\n");
-				fprintf(assemb, "STA $op1\n"); nInst++;
+				fprintf(assemb, "STA $op1\n"); nInst += 2;
 
 
 				/* obtencao do sinal de $t2 em $op2 (0 = +, 1 = -) */
 				// carrega $t2 no acumulador
 				printf("LDA %s\n", quad[i].campo[3]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio se for negativo
 				printf("JN .2ndnegative%d\n", count_op);
-				fprintf(assemb, "JN .2ndnegative%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .2ndnegative%d\n", count_op); nInst += 2;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// desvio para label positivo
 				printf("J .2ndpositive%d\n", count_op);
-				fprintf(assemb, "J .2ndpositive%d\n", count_op); nInst++;
+				fprintf(assemb, "J .2ndpositive%d\n", count_op); nInst += 2;
 				// label de negativo
 				printf(".2ndnegative%d\n", count_op);
 				fprintf(assemb, ".2ndnegative%d\n", count_op);
@@ -584,13 +581,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				fprintf(assemb, "NOT\n"); nInst++;
 				// adiciona 1
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena em $t2
 				printf("STA %s\n", quad[i].campo[3]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// label de positivo
 				printf(".2ndpositive%d\n", count_op);
 				fprintf(assemb, ".2ndpositive%d\n", count_op);
@@ -600,22 +597,22 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena em $op1
 				printf("STA $op2\n");
-				fprintf(assemb, "STA $op2\n"); nInst++;
+				fprintf(assemb, "STA $op2\n"); nInst += 2;
 
 				/* verifica se os sinais de $t1 e $t2 sao iguais e armazena em $op1 (0 =, 1 !=)*/
 				// $op2 ja esta no acumulador
 				// subtrai $op1
 				printf("SUB $op1\n");
-				fprintf(assemb, "SUB $op1\n"); nInst++;
+				fprintf(assemb, "SUB $op1\n"); nInst += 2;
 				// desvio se for zero
 				printf("JZ .igual%d\n", count_op);
-				fprintf(assemb, "JZ .igual%d\n", count_op); nInst++;
+				fprintf(assemb, "JZ .igual%d\n", count_op); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// desvio para label de diferente
 				printf("J .dif%d\n", count_op);
-				fprintf(assemb, "J .dif%d\n", count_op); nInst++;
+				fprintf(assemb, "J .dif%d\n", count_op); nInst += 2;
 				// label de igual
 				printf(".igual%d\n", count_op);
 				fprintf(assemb, ".igual%d\n", count_op);
@@ -625,7 +622,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// label de diferente
 				printf(".dif%d\n", count_op);
 				fprintf(assemb, ".dif%d\n", count_op);
@@ -635,40 +632,40 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena em $op1
 				printf("STA $op2\n");
-				fprintf(assemb, "STA $op2\n"); nInst++;
+				fprintf(assemb, "STA $op2\n"); nInst += 2;
 
 				/* realiza o algoritmo de divisao com os valores absolutos de $t1 e $t2 */
 				// label de inicio
 				printf(".start%d\n", count_op);
-				fprintf(assemb, ".start%d\n", count_op); nInst++;
+				fprintf(assemb, ".start%d\n", count_op); nInst += 2;
 				sprintf(nOp, "%d", count_op);
 				strcpy(labelAux, ".start");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
 				// carrega $t1
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio para label de fim se for negativo
 				printf("JN .end\n");
-				fprintf(assemb, "JN .end\n"); nInst++;
+				fprintf(assemb, "JN .end\n"); nInst += 2;
 				// armazena em $t1
 				printf("STA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[2]); nInst += 2;
 				// carrega $t3 no acumulador
 				printf("LDA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				// adiciona 1
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				// desvio para label de inicio
 				printf("J .start%d\n", count_op);
-				fprintf(assemb, "J .start%d\n", count_op); nInst++;
+				fprintf(assemb, "J .start%d\n", count_op); nInst += 2;
 				// label de fim
 				printf(".end%d\n", count_op);
 				fprintf(assemb, ".end%d\n", count_op);
@@ -680,22 +677,22 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				/* inverte o sinal do quociente se $t1 e $t2 tiverem sinais opostos */
 				// carrega $op1 no acumulador
 				printf("LDA $op1\n");
-				fprintf(assemb, "LDA $op1\n"); nInst++;
+				fprintf(assemb, "LDA $op1\n"); nInst += 2;
 				// desvio para label de skip se for zero (sinais iguais)
 				printf("JZ .skip%d\n", count_op);
-				fprintf(assemb, "J .skip%d\n", count_op); nInst++;
+				fprintf(assemb, "J .skip%d\n", count_op); nInst += 2;
 				// carrega $t3
 				printf("LDA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				// inverte os bits de $t3
 				printf("NOT\n");
 				fprintf(assemb, "NOT\n"); nInst++;
 				// adiciona 1
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 
 				// label de skip
 				printf(".skip%d\n", count_op);
@@ -713,19 +710,19 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(GTEq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio para label de falso
 				printf("JN .false%d\n", count_op);
-				fprintf(assemb, "JN .false%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .false%d\n", count_op); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("J .true%d\n", count_op);
-				fprintf(assemb, "J .true%d\n", count_op); nInst++;
+				fprintf(assemb, "J .true%d\n", count_op); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -735,7 +732,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -745,7 +742,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -755,22 +752,22 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(GTq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// subtrai 1 do acumulador
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// desvio para label de falso
 				printf("JN .false%d\n", count_op);
-				fprintf(assemb, "JN .false%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .false%d\n", count_op); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("J .true%d\n", count_op);
-				fprintf(assemb, "J .true%d\n", count_op); nInst++;
+				fprintf(assemb, "J .true%d\n", count_op); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -780,7 +777,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -790,7 +787,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -800,22 +797,22 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(LTEq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// subtrai 1 do acumulador
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("JN .true%d\n", count_op);
-				fprintf(assemb, "JN .true%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .true%d\n", count_op); nInst += 2;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// desvio para label de falso
 				printf("J .false%d\n", count_op);
-				fprintf(assemb, "J .false%d\n", count_op); nInst++;
+				fprintf(assemb, "J .false%d\n", count_op); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -825,7 +822,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -835,7 +832,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -845,19 +842,19 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(LTq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("JN .true%d\n", count_op);
-				fprintf(assemb, "JN .true%d\n", count_op); nInst++;
+				fprintf(assemb, "JN .true%d\n", count_op); nInst += 2;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// desvio para label de falso
 				printf("J .false%d\n", count_op);
-				fprintf(assemb, "J .false%d\n", count_op); nInst++;
+				fprintf(assemb, "J .false%d\n", count_op); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -867,7 +864,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -877,7 +874,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -887,19 +884,19 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(EQq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("JZ .true%d\n", count_op);
-				fprintf(assemb, "JZ .true%d\n", count_op); nInst++;
+				fprintf(assemb, "JZ .true%d\n", count_op); nInst += 2;
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// desvio para label de falso
 				printf("J .false%d\n", count_op);
-				fprintf(assemb, "J .false%d\n", count_op); nInst++;
+				fprintf(assemb, "J .false%d\n", count_op); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -909,7 +906,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -919,7 +916,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -929,19 +926,19 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(NEq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[2]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 				// subtrai $t2 do acumulador
 				printf("SUB %s\n", quad[i].campo[3]);
-				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst++;
+				fprintf(assemb, "SUB %s\n", quad[i].campo[3]); nInst += 2;
 				// desvio para label de falso
 				printf("JZ .false%d\n", count_op);
-				fprintf(assemb, "JZ .false%d\n", count_op); nInst++;
+				fprintf(assemb, "JZ .false%d\n", count_op); nInst += 2;
 				// carrega 1 no acumulador
 				printf("LDA 1\n");
-				fprintf(assemb, "LDA 1\n"); nInst++;
+				fprintf(assemb, "LDA 1\n"); nInst += 2;
 				// desvio para label de verdadeiro
 				printf("J .true%d\n", count_op);
-				fprintf(assemb, "J .true%d\n", count_op); nInst++;
+				fprintf(assemb, "J .true%d\n", count_op); nInst += 2;
 				// label de falso
 				printf(".false%d\n", count_op);
 				fprintf(assemb, ".false%d\n", count_op);
@@ -951,7 +948,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// carrega 0 no acumulador
 				printf("LDA 0\n");
-				fprintf(assemb, "LDA 0\n"); nInst++;
+				fprintf(assemb, "LDA 0\n"); nInst += 2;
 				// label de verdadeiro
 				printf(".true%d\n", count_op);
 				fprintf(assemb, ".true%d\n", count_op);
@@ -961,7 +958,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				insertLabel(tab, labelAux, label);
 				// armazena acumulador em $t3
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				count_op++;
 				startParam = 0;
 				break;
@@ -971,13 +968,13 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(IFq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				// subtrai 1 do acumulador
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// desvio (se $t1 for 1, $t1-1=0 e o desvio eh feito)
 				printf("JZ %s\n", quad[i].campo[2]);
-				fprintf(assemb, "JZ %s\n", quad[i].campo[2]); nInst++;
+				fprintf(assemb, "JZ %s\n", quad[i].campo[2]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -986,7 +983,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(GOTOq):
 				// desvio para label
 				printf("J %s\n", quad[i].campo[1]);
-				fprintf(assemb, "J %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "J %s\n", quad[i].campo[1]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -1008,34 +1005,34 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				if(!strcmp(quad[i].campo[3], "-")){ // simples
 					// carrega var no acumulador
 					printf("LDA %s\n", quad[i].campo[2]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 					// armazena acumulador em $t1
 					printf("STA %s\n", quad[i].campo[1]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				}
 				else{ // vetor
 					// carrega $t2 no acumulador
 					printf("LDA %s\n", quad[i].campo[3]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst += 2;
 					// verifica se a variavel eh ponteiro
 					if(ehPonteiro(tab, quad[i].campo[2], escopoAtual)){
 						printf("ADD [%s]\n", quad[i].campo[2]);
-						fprintf(assemb, "ADD [%s]\n", quad[i].campo[2]); nInst++;
+						fprintf(assemb, "ADD [%s]\n", quad[i].campo[2]); nInst += 2;
 					}
 					else{
 						// soma o endereco de var ao acumulador
 						printf("ADD &%s\n", quad[i].campo[1]);
-						fprintf(assemb, "ADD &%s\n", quad[i].campo[1]); nInst++; // puxa o endereco da tabela
+						fprintf(assemb, "ADD &%s\n", quad[i].campo[1]); nInst += 2; // puxa o endereco da tabela
 					}
 					// armazena acumulador em $t2
 					printf("STA %s\n", quad[i].campo[3]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst += 2;
 					// carrega o endereco apontado por $t2
 					printf("LDA [%s]\n", quad[i].campo[3]);
-					fprintf(assemb, "LDA [%s]\n", quad[i].campo[3]); nInst++; // enderecamento indireto
+					fprintf(assemb, "LDA [%s]\n", quad[i].campo[3]); nInst += 2; // enderecamento indireto
 					// armazena acumulador em $t1
 					printf("STA %s\n", quad[i].campo[1]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				}
 				startParam = 0;
 				break;
@@ -1046,35 +1043,35 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				if(!strcmp(quad[i].campo[3], "-")){ // simples
 					// carrega $t1 no acumulador
 					printf("LDA %s\n", quad[i].campo[2]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 					// armazena acumulador em var
 					printf("STA %s\n", quad[i].campo[1]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				}
 				else{ // vetor
 					// carrega $t2 no acumulador
 					printf("LDA %s\n", quad[i].campo[3]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst += 2;
 					// verifica se a variavel eh ponteiro
 					if(ehPonteiro(tab, quad[i].campo[1], escopoAtual)){
 						// soma o endereco apontado pelo ponteiro ao acumulador
 						printf("ADD [%s]\n", quad[i].campo[1]);
-						fprintf(assemb, "ADD [%s]\n", quad[i].campo[1]); nInst++;
+						fprintf(assemb, "ADD [%s]\n", quad[i].campo[1]); nInst += 2;
 					}
 					else{
 						// soma o endereco de var ao acumulador
 						printf("ADD &%s\n", quad[i].campo[1]);
-						fprintf(assemb, "ADD &%s\n", quad[i].campo[1]); nInst++; // puxa o endereco da tabela
+						fprintf(assemb, "ADD &%s\n", quad[i].campo[1]); nInst += 2; // puxa o endereco da tabela
 					}
 					// armazena acumulador em $t2
 					printf("STA %s\n", quad[i].campo[3]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[3]); nInst += 2;
 					// carrega $t1 no acumulador
 					printf("LDA %s\n", quad[i].campo[2]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[2]); nInst += 2;
 					// armazena $t1 no endereco apontado por $t2
 					printf("STA [%s]\n", quad[i].campo[3]);
-					fprintf(assemb, "STA [%s]\n", quad[i].campo[3]); nInst++; // enderecamento indireto
+					fprintf(assemb, "STA [%s]\n", quad[i].campo[3]); nInst += 2; // enderecamento indireto
 				}
 				startParam = 0;
 				break;
@@ -1108,31 +1105,31 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				if(!strcmp(quad[i].campo[2], "int")){ // int
 					// carrega $t1 no acumulador
 					printf("LDA %s\n", quad[i].campo[1]);
-					fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				}
 				else { // vetor
 					// carrega endereco no acumulador
 					if(ehPonteiro(tab, quad[i].campo[1], quad[i].campo[3])){
 						printf("LDA [%s]\n", quad[i].campo[1]);
-						fprintf(assemb, "LDA [%s]\n", quad[i].campo[1]); nInst++;
+						fprintf(assemb, "LDA [%s]\n", quad[i].campo[1]); nInst += 2;
 					}
 					else{
 						printf("LDA &%s\n", quad[i].campo[1]);
-						fprintf(assemb, "LDA &%s\n", quad[i].campo[1]); nInst++;
+						fprintf(assemb, "LDA &%s\n", quad[i].campo[1]); nInst += 2;
 					}
 				}
 				// armazena acumulador na pilha
 				printf("STA [$stck]\n");
-				fprintf(assemb, "STA [$stck]\n"); nInst++; // enderecamento indireto
+				fprintf(assemb, "STA [$stck]\n"); nInst += 2; // enderecamento indireto
 				// carrega o ponteiro de pilha no acumulador
 				printf("LDA $stck\n");
-				fprintf(assemb, "LDA $stck\n"); nInst++;
+				fprintf(assemb, "LDA $stck\n"); nInst += 2;
 				// soma 1 no acumulador
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena acumulador no ponteiro de pilha
 				printf("STA $stck\n");
-				fprintf(assemb, "STA $stck\n"); nInst++;
+				fprintf(assemb, "STA $stck\n"); nInst += 2;
 				break;
 
 			// (ARG, var, escopo, int) ou (ARG, var, escopo, vet)
@@ -1154,27 +1151,27 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// desempilha um parametro
 				// carrega ponteiro de pilha no acumulador
 				printf("LDA $stck\n");
-				fprintf(assemb, "LDA $stck\n"); nInst++;
+				fprintf(assemb, "LDA $stck\n"); nInst += 2;
 				// subtrai um do acumulador
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// carrega acumulador no ponteiro de pilha
 				printf("STA $stck\n");
-				fprintf(assemb, "STA $stck\n"); nInst++;
+				fprintf(assemb, "STA $stck\n"); nInst += 2;
 				// carrega o topo da pilha no acumulador
 				printf("LDA [$stck]\n");
-				fprintf(assemb, "LDA [$stck]\n"); nInst++; // enderecamento indireto
+				fprintf(assemb, "LDA [$stck]\n"); nInst += 2; // enderecamento indireto
 				// se for variavel
 				if(!strcmp(quad[i].campo[3], "int")){
 					// armazena pilha na variavel
 					printf("STA %s\n", quad[i].campo[1]);
-					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 				}
 				else { // se for vetor
 					// atualiza endereco do ponteiro
 					// endereco do vetor ta no acumulador
 					printf("STA $ptr%d\n", ptr-1);
-					fprintf(assemb, "STA $ptr%d\n", ptr-1); nInst++;
+					fprintf(assemb, "STA $ptr%d\n", ptr-1); nInst += 2;
 				}
 				startParam = 0;
 				break;
@@ -1198,17 +1195,17 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// caso especial para input
 				if(!strcmp(quad[i].campo[2], "input")){
 					printf("INPUT %s\n", quad[i].campo[1]);
-					fprintf(assemb, "INPUT %s\n", quad[i].campo[1]); nInst++;
+					fprintf(assemb, "INPUT %s\n", quad[i].campo[1]); nInst += 2;
 					break;
 				}
 				// caso especial para output
 				if(!strcmp(quad[i].campo[2], "output")){
 					// carrega topo da pilha
 					printf("LDA $stck\n");
-					fprintf(assemb, "LDA $stck\n"); nInst++;
+					fprintf(assemb, "LDA $stck\n"); nInst += 2;
 					// diminui topo da pilha
 					printf("SUB 1\n");
-					fprintf(assemb, "SUB 1\n"); nInst++;
+					fprintf(assemb, "SUB 1\n"); nInst += 2;
 					// armazena topo da pilha
 					printf("STA $stck\n");
 					fprintf(assemb, "STA $stck\n");
@@ -1217,32 +1214,32 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					strcat(funcat, quad[i].campo[1] + 2*sizeof(char));
 					// chama a funcao output ja no temporario do parametro
 					printf("OUTPUT $t%d\n", atoi(funcat)-1);
-					fprintf(assemb, "OUTPUT $t%d\n", atoi(funcat)-1); nInst++;
+					fprintf(assemb, "OUTPUT $t%d\n", atoi(funcat)-1); nInst += 2;
 					break;
 				}
 				// funcoes definidas pelo usuario
 				// empilha endereco de retorno
 				// carrega endereco de retorno no acumulador
 				printf("LDA %d\n", nInst+6);
-				fprintf(assemb, "LDA %d\n", nInst+6); nInst++;
+				fprintf(assemb, "LDA %d\n", nInst+6); nInst += 2;
 				// armazena no topo da pilha 2
 				printf("STA [$stck2]\n");
-				fprintf(assemb, "STA [$stck2]\n"); nInst++;
+				fprintf(assemb, "STA [$stck2]\n"); nInst += 2;
 				// carrega ponteiro de topo da pilha 2
 				printf("LDA $stck2\n");
-				fprintf(assemb, "LDA $stck2\n"); nInst++;
+				fprintf(assemb, "LDA $stck2\n"); nInst += 2;
 				// aumenta o topo da pilha 2 (pilha 2 cresce para baixo)
 				printf("SUB 1\n");
-				fprintf(assemb, "SUB 1\n"); nInst++;
+				fprintf(assemb, "SUB 1\n"); nInst += 2;
 				// armazena ponteiro de pilha 2
 				printf("STA $stck2\n");
-				fprintf(assemb, "STA $stck2\n"); nInst++;
+				fprintf(assemb, "STA $stck2\n"); nInst += 2;
 
 				strcpy(funcat, ">");
 				strcat(funcat, quad[i].campo[2]);
 				// desvio para label da funcao
 				printf("J %s\n", funcat);
-				fprintf(assemb, "J %s\n", funcat); nInst++;
+				fprintf(assemb, "J %s\n", funcat); nInst += 2;
 
 				// insere label de retorno da chamada
 				printf("<call%d\n", call);
@@ -1258,10 +1255,10 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 
 				// carrega $ret
 				printf("LDA $ret\n");
-				fprintf(assemb, "LDA $ret\n"); nInst++;
+				fprintf(assemb, "LDA $ret\n"); nInst += 2;
 				// armazena em $t1
 				printf("STA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "STA %s\n", quad[i].campo[1]); nInst += 2;
 
 				startParam = 0;
 				break;
@@ -1271,25 +1268,25 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			case(RETURNq):
 				// carrega $t1 no acumulador
 				printf("LDA %s\n", quad[i].campo[1]);
-				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst++;
+				fprintf(assemb, "LDA %s\n", quad[i].campo[1]); nInst += 2;
 				// armazena acumulador em $ret
 				printf("STA $ret\n");
-				fprintf(assemb, "STA $ret\n"); nInst++;
+				fprintf(assemb, "STA $ret\n"); nInst += 2;
 
 				// execucao igual ao do end
 				// desempilha o endereco de retorno
 				// carrega ponteiro de pilha 2
 				printf("LDA $stck2\n");
-				fprintf(assemb, "LDA $stck2\n"); nInst++;
+				fprintf(assemb, "LDA $stck2\n"); nInst += 2;
 				// diminui o tamanho da pilha 2 (pilha 2 decresce para cima)
 				printf("ADD 1\n");
-				fprintf(assemb, "ADD 1\n"); nInst++;
+				fprintf(assemb, "ADD 1\n"); nInst += 2;
 				// armazena ponteiro de pilha 2
 				printf("STA $stck2\n");
-				fprintf(assemb, "STA $stck2\n"); nInst++;
+				fprintf(assemb, "STA $stck2\n"); nInst += 2;
 				// faz o desvio para o endereco indicado no topo da pilha
 				printf("J [$stck2]\n");
-				fprintf(assemb, "J [$stck2]\n"); nInst++; // enderecamento direto
+				fprintf(assemb, "J [$stck2]\n"); nInst += 2; // enderecamento direto
 				
 				startParam=0;
 				break;
@@ -1303,16 +1300,16 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					// desempilha o endereco de retorno
 					// carrega ponteiro de pilha 2
 					printf("LDA $stck2\n");
-					fprintf(assemb, "LDA $stck2\n"); nInst++;
+					fprintf(assemb, "LDA $stck2\n"); nInst += 2;
 					// diminui o tamanho da pilha 2 (pilha 2 decresce para cima)
 					printf("ADD 1\n");
-					fprintf(assemb, "ADD 1\n"); nInst++;
+					fprintf(assemb, "ADD 1\n"); nInst += 2;
 					// armazena ponteiro de pilha 2
 					printf("STA $stck2\n");
-					fprintf(assemb, "STA $stck2\n"); nInst++;
+					fprintf(assemb, "STA $stck2\n"); nInst += 2;
 					// faz o desvio para o endereco indicado no topo da pilha
 					printf("J [$stck2]\n");
-					fprintf(assemb, "J [$stck2]\n"); nInst++; // enderecamento direto
+					fprintf(assemb, "J [$stck2]\n"); nInst += 2; // enderecamento direto
 				}
 				startParam = 0;
 				break;
@@ -1353,7 +1350,7 @@ tab_t* assembgen(void){
 	nQuad--;
 
 	// aloca um vetor de quaruplas no tamanho certo
-	quad = (quadrupla_t*) malloc(nQuad*sizeof(quadrupla_t));
+	quad = (quadrupla_t*) malloc(nQuad * sizeof(quadrupla_t));
 
 	// le as quadruplas do codigo intermediario
 	readQuad(quad, nQuad, "itmCode");
@@ -1370,7 +1367,7 @@ tab_t* assembgen(void){
 
 	printf("Codigo Assembly:\n");
 	// comeca a execucao na funcao main
-	printf("J >main\n"); nInst++;
+	printf("J >main\n"); nInst += 2;
 	fprintf(assemb, "J >main\n");
 	genAsemb(quad, nQuad, tab);
 
