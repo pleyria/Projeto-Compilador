@@ -1,3 +1,5 @@
+#define TAMPALVRA 16
+
 // tipos de instrucoes
 typedef enum{
 	STAi, LDAi, ADDi, SUBi, ANDi, ORi, NOTi, Ji, JNi, JZi, INi,

@@ -75,105 +75,147 @@ void readInst(instrucao_t* inst, int nInst, char* arquivo){
 	fclose(assemb);
 }
 
+void endercamento(char* com){
+	int im;
+
+	switch(com[0]){
+		// sem operando explicito (11)
+		case('-'):
+			printf(".11.000000000\n");
+			break;
+
+		// imediato (10)
+		case('0'):
+		case('1'):
+		case('2'):
+		case('3'):
+		case('4'):
+		case('5'):
+		case('6'):
+		case('7'):
+		case('8'):
+		case('9'):
+			printf(".10.000000000\n");
+			// impressao do imediato
+			break;
+
+		// enderecamento indireto (01)
+		case('['):
+			printf(".01.000000000\n");
+			break;
+
+		// enderecamento direto (00)
+		case('$'): // da pra tirar esse case depois?
+		default:
+			printf(".00.000000000\n");
+			break;
+	}
+}
+
 void genBin(instrucao_t* inst, int nInst, tab_t* tab){
 	int i;
+	int label = 0;
 
 	for(i=0; i<nInst; i++){
+		label = 0;
 		switch(tipoInst(inst[i].campo[0])){
 			// Store Accumulator
 			case(STAi):
 				// 5 bits especificando a instrucao
-				printf("00001\n");
+				printf("00001");
 				break;
 
 			// Load Accumulator
 			case(LDAi):
 				// 5 bits especificando a instrucao
-				printf("00010\n");
+				printf("00010");
 				break;
 
 			// Adition
 			case(ADDi):
 				// 5 bits especificando a instrucao
-				printf("00011\n");
+				printf("00011");
 				break;
 
 			// Subtraction
 			case(SUBi):
 				// 5 bits especificando a instrucao
-				printf("00100\n");
+				printf("00100");
 				break;
 
 			// AND bitwise
 			case(ANDi):
 				// 5 bits especificando a instrucao
-				printf("00101\n");
+				printf("00101");
 				break;
 
 			// OR bitwise
 			case(ORi):
 				// 5 bits especificando a instrucao
-				printf("00110\n");
+				printf("00110");
 				break;
 
 			// NOT bitwise
 			case(NOTi):
 				// 5 bits especificando a instrucao
-				printf("00111\n");
+				printf("00111");
 				break;
 
 			// Jump
 			case(Ji):
 				// 5 bits especificando a instrucao
-				printf("01000\n");
+				printf("01000");
 				break;
 
 			// Jump if Negative
 			case(JNi):
 				// 5 bits especificando a instrucao
-				printf("01001\n");
+				printf("01001");
 				break;
 
 			// Jump if Zero
 			case(JZi):
 				// 5 bits especificando a instrucao
-				printf("01010\n");
+				printf("01010");
 				break;
 
 			// INput
 			case(INi):
 				// 5 bits especificando a instrucao
-				printf("01011\n");
+				printf("01011");
 				break;
 
 			// OUTput
 			case(OUTi):
 				// 5 bits especificando a instrucao
-				printf("01100\n");
+				printf("01100");
 				break;
 
 			// SHift Right
 			case(SHRi):
 				// 5 bits especificando a instrucao
-				printf("01101\n");
+				printf("01101");
 				break;
 
 			// SHift Left
 			case(SHLi):
 				// 5 bits especificando a instrucao
-				printf("01110\n");
+				printf("01110");
 				break;
 
 			// HaLT
 			case(HLTi):
 				// 5 bits especificando a instrucao
-				printf("01111\n");
+				printf("01111");
 				break;
 
 			// ignora labels do codigo assembly
 			default:
+				label = 1;
 				break;
 		}
+		if(!label)
+			endercamento(inst[i].campo[1]);
 	}
 }
 
