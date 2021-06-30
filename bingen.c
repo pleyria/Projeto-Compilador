@@ -5,6 +5,9 @@
 #include "assembgen.h"
 #include "bingen.h"
 
+/* arquivo para escrita do codigo binario */
+static FILE* binc;
+
 tipo_inst_t tipoInst(char* com){
 	if(!strcmp(com, "STA"))
 		return STAi;
@@ -75,16 +78,69 @@ void readInst(instrucao_t* inst, int nInst, char* arquivo){
 	fclose(assemb);
 }
 
-void endercamento(char* com){
+int enderecoVar(tab_t* tab, char* escopo, char* var){
+	int i;
+
+	for(i=0; i< tab->nVar; i++){
+		if(strcmp(var, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) == 0)
+			return tab->tab_var[i].endereco;
+	}
+}
+
+int enderecoLabel(tab_t* tab, char* lab){
+	int i;
+
+	for(i=0; i < tab->nLab; i++){
+		if(!strcmp(tab->tab_label[i].nome, lab))
+			return tab->tab_label[i].endereco;
+	}
+}
+
+// decimal -> binario
+void decToBin(int dec){
+	int i, n;
+	int bin[TAMPALAVRA];
+
+	n = 0;
+	while(dec > 0){
+		bin[n] = dec % 2;
+		dec /= 2;
+		n++;
+	}
+
+	for(i=0; i < TAMPALAVRA-n; i++){
+		printf("0");
+		fprintf(binc, "0");
+	}
+
+	for(i=n-1; i >= 0; i--){
+		printf("%d", bin[i]);
+		fprintf(binc, "%d", bin[i]);
+	}
+	printf("\n");
+	fprintf(binc, "\n");
+}
+
+// trata a segunda parte das instrucoes
+void endercamento(tab_t* tab, char* escopoAtual, char* com){
 	int im;
+	char temp[4];
 
 	switch(com[0]){
 		// sem operando explicito (11)
 		case('-'):
-			printf(".11.000000000\n");
+			printf("11000000000\n");
+			fprintf(binc, "11000000000\n");
 			break;
 
 		// imediato (10)
+		case('&'):
+			// ponteiro
+			// obtencao do endereco do nome da variavel sem o '&'
+			im = enderecoVar(tab, escopoAtual, com + sizeof(char));
+			decToBin(im);
+			break;
+
 		case('0'):
 		case('1'):
 		case('2'):
@@ -95,19 +151,92 @@ void endercamento(char* com){
 		case('7'):
 		case('8'):
 		case('9'):
-			printf(".10.000000000\n");
+			// numero
+			printf("10000000000\n");
+			fprintf(binc, "10000000000\n");
 			// impressao do imediato
+			decToBin(atoi(com));
 			break;
 
 		// enderecamento indireto (01)
 		case('['):
-			printf(".01.000000000\n");
+			printf("01000000000\n");
+			fprintf(binc, "01000000000\n");
+			// remove o ultimo ']'
+			com[strlen(com)-1] = '\0';
+			// especial
+			if(com[1] == '$'){
+				if(!strcmp(com + 2*sizeof(char), "stck")){
+					decToBin(STCK);
+					break;
+				}
+				if(!strcmp(com + 2*sizeof(char), "stck2")){
+					decToBin(STCK2);
+					break;
+				}
+			}
 			break;
 
 		// enderecamento direto (00)
-		case('$'): // da pra tirar esse case depois?
+		case('$'):
+			printf("00000000000\n");
+			fprintf(binc, "00000000000\n");
+			// temporario
+			if(com[1] == 't'){
+				// obtem o numero do temporario
+				strcpy(temp, "");
+				strcat(temp, com + 2*sizeof(char));
+				im = atoi(temp);
+				// imprimme o endereco do temporario
+				decToBin(TEMPstart + im - 1);
+				break;
+			}
+			// $OP1
+			if(!strcmp(com + sizeof(char), "op1")){
+				decToBin(OP1);
+				break;
+			}
+			// $OP2
+			if(!strcmp(com + sizeof(char), "op2")){
+				decToBin(OP2);
+				break;
+			}
+			// topo da pilha 1
+			if(!strcmp(com + sizeof(char), "stck")){
+				decToBin(STCK);
+				break;
+			}
+			// topo da pilha 2
+			if(!strcmp(com + sizeof(char), "stck2")){
+				decToBin(STCK2);
+				break;
+			}
+			// valor de retorno de funcao
+			if(!strcmp(com + sizeof(char), "ret")){
+				decToBin(RET);
+				break;
+			}
+			break;
+
+		// labels
+		case('.'):
+		case('_'):
+		case('>'):
+		case('<'):
+			// para labels obtidas da tabela, o enderecamento eh imediato
+			printf("01000000000\n");
+			fprintf(binc, "01000000000\n");
+			// pega o endereco indicado pela label
+			im = enderecoLabel(tab, com);
+			decToBin(im);
+			break;
+
 		default:
-			printf(".00.000000000\n");
+			printf("00000000000\n");
+			fprintf(binc, "00000000000\n");
+			// variavel criada pelo usuario
+			im = enderecoVar(tab, escopoAtual, com);
+			decToBin(im);
 			break;
 	}
 }
@@ -115,107 +244,131 @@ void endercamento(char* com){
 void genBin(instrucao_t* inst, int nInst, tab_t* tab){
 	int i;
 	int label = 0;
+	char escopoAtual[MAXLAB];
 
 	for(i=0; i<nInst; i++){
 		label = 0;
+
+		// impressao da instrucao assembly correspondente no terminal
+		printf("[%s %s]\n", inst[i].campo[0], inst[i].campo[1]);
+
 		switch(tipoInst(inst[i].campo[0])){
 			// Store Accumulator
 			case(STAi):
 				// 5 bits especificando a instrucao
 				printf("00001");
+				fprintf(binc, "00001");
 				break;
 
 			// Load Accumulator
 			case(LDAi):
 				// 5 bits especificando a instrucao
 				printf("00010");
+				fprintf(binc, "00010");
 				break;
 
 			// Adition
 			case(ADDi):
 				// 5 bits especificando a instrucao
 				printf("00011");
+				fprintf(binc, "00011");
 				break;
 
 			// Subtraction
 			case(SUBi):
 				// 5 bits especificando a instrucao
 				printf("00100");
+				fprintf(binc, "00100");
 				break;
 
 			// AND bitwise
 			case(ANDi):
 				// 5 bits especificando a instrucao
 				printf("00101");
+				fprintf(binc, "00101");
 				break;
 
 			// OR bitwise
 			case(ORi):
 				// 5 bits especificando a instrucao
 				printf("00110");
+				fprintf(binc, "00110");
 				break;
 
 			// NOT bitwise
 			case(NOTi):
 				// 5 bits especificando a instrucao
 				printf("00111");
+				fprintf(binc, "00111");
 				break;
 
 			// Jump
 			case(Ji):
 				// 5 bits especificando a instrucao
 				printf("01000");
+				fprintf(binc, "01000");
 				break;
 
 			// Jump if Negative
 			case(JNi):
 				// 5 bits especificando a instrucao
 				printf("01001");
+				fprintf(binc, "01001");
 				break;
 
 			// Jump if Zero
 			case(JZi):
 				// 5 bits especificando a instrucao
 				printf("01010");
+				fprintf(binc, "01010");
 				break;
 
 			// INput
 			case(INi):
 				// 5 bits especificando a instrucao
 				printf("01011");
+				fprintf(binc, "01011");
 				break;
 
 			// OUTput
 			case(OUTi):
 				// 5 bits especificando a instrucao
 				printf("01100");
+				fprintf(binc, "01100");
 				break;
 
 			// SHift Right
 			case(SHRi):
 				// 5 bits especificando a instrucao
 				printf("01101");
+				fprintf(binc, "01101");
 				break;
 
 			// SHift Left
 			case(SHLi):
 				// 5 bits especificando a instrucao
 				printf("01110");
+				fprintf(binc, "01110");
 				break;
 
 			// HaLT
 			case(HLTi):
 				// 5 bits especificando a instrucao
 				printf("01111");
+				fprintf(binc, "01111");
 				break;
 
 			// ignora labels do codigo assembly
-			default:
+			case(LABELi):
 				label = 1;
+				// se o label for de inicio de funcao
+				// salva o nome do escopo atual
+				if(inst[i].campo[0][0] == '>')
+					strcpy(escopoAtual, inst[i].campo[0] + sizeof(char));
 				break;
 		}
 		if(!label)
-			endercamento(inst[i].campo[1]);
+			endercamento(tab, escopoAtual, inst[i].campo[1]);
 	}
 }
 
@@ -233,9 +386,17 @@ void bingen(tab_t* tab){
 	// le as instrucoes no codigo assembly
 	readInst(inst, nInst, "assembCode");
 
+	binc = fopen("binCode", "w");
+	if(binc == NULL){
+		printf("\nErro ao escrever no binc do codigo binario!\n");
+		return;
+	}
+
 	printf("Codigo binario:\n");
 	// produz o codigo binario
 	genBin(inst, nInst, tab);
+
+	fclose(binc);
 
 	for(i=0; i<nInst; i++){
 		for(j=0; j<2; j++)

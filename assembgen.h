@@ -11,7 +11,7 @@
 #define STCK 43672	// topo da pilha
 #define STCK2 43673	// topo da pilha 2
 
-#define ret 43674	// retorno
+#define RET 43674	// retorno
 
 #define PTR0 43675	// ponteiro 0
 #define PTR1 43676	// ponteiro 1

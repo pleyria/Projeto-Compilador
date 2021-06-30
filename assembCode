@@ -1,7 +1,15 @@
+LDA 43669
+STA $stck
+LDA 21845
+STA $stck2
 J >main
 >main
-LDA 2
+LDA 5
 STA $t1
 LDA $t1
 STA a
+LDA 3
+STA $t2
+LDA $t2
+STA b
 HLT

@@ -1366,6 +1366,15 @@ tab_t* assembgen(void){
 	}
 
 	printf("Codigo Assembly:\n");
+	// inicializa ponteiros de pilha
+	printf("LDA %d\n", STACKstart);
+	fprintf(assemb, "LDA %d\n", STACKstart);
+	printf("STA $stck\n");
+	fprintf(assemb, "STA $stck\n");
+	printf("LDA %d\n", STACK2start);
+	fprintf(assemb, "LDA %d\n", STACK2start);
+	printf("STA $stck2\n");
+	fprintf(assemb, "STA $stck2\n");
 	// comeca a execucao na funcao main
 	printf("J >main\n"); nInst += 2;
 	fprintf(assemb, "J >main\n");

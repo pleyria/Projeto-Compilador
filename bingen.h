@@ -1,4 +1,4 @@
-#define TAMPALVRA 16
+#define TAMPALAVRA 16
 
 // tipos de instrucoes
 typedef enum{
