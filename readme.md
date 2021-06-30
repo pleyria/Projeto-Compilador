@@ -30,7 +30,7 @@ Isso gera o executavel cms que aceita como entrada um arquivo de código fonte. P
 ./cms "arquivo do codigo fonte"
 ```
 
-A saída no terminal contém os tokens identificados e seus lexemas, a árvore de análise sintática formatada por tabulações, a tabela de simbolos gerada, o resultado da verificação de tipos, o código intermediário de três endereços, o código intermediário de quádruplas, o código assembly e o código binpario executável.
+A saída no terminal contém os tokens identificados e seus lexemas, a árvore de análise sintática formatada por tabulações, a tabela de simbolos gerada, o resultado da verificação de tipos, o código intermediário de três endereços, o código intermediário de quádruplas, o código assembly, a tabela de variáveis, a tabela de labels e o código binário executável.
 
 São gerados também três arquivos:
 * itmCode: Contém o código intermediário gerado na forma de quádruplas
