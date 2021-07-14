@@ -1,6 +1,14 @@
+int fibonacci(int n){
+	if(n <= 1){
+		return n;
+	}
+	return fibonacci(n-1) + fibonacci(n-2);
+}
+
 void main(void){
-	int a; int b;
+	int x;
 	
-	a = 5;
-	b = 3;
+	x = input();
+	
+	output(fibonacci(x));
 }

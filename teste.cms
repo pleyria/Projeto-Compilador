@@ -1,10 +1,7 @@
-int fatorial(int x){
-	if(x == 0){ return 0; }
-	else { return x + fatorial(x-1); }
-}
+int funcao(int vet[]){}
 
 void main(void){
-	int a;
-	a = input();
-	output(fatorial(a));
+	int vetor[10];
+	
+	funcao(vetor);
 }

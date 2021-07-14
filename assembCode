@@ -3,13 +3,29 @@ STA $stck
 LDA 21845
 STA $stck2
 J >main
+>funcao
+LDA $stck
+SUB 1
+STA $stck
+LDA [$stck]
+STA $ptr0
+LDA $stck2
+ADD 1
+STA $stck2
+J [$stck2]
 >main
-LDA 5
+LDA &vetor
+STA [$stck]
+LDA $stck
+ADD 1
+STA $stck
+LDA 36
+STA [$stck2]
+LDA $stck2
+SUB 1
+STA $stck2
+J >funcao
+<call0
+LDA $ret
 STA $t1
-LDA $t1
-STA a
-LDA 3
-STA $t2
-LDA $t2
-STA b
 HLT

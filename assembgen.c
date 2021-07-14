@@ -160,7 +160,7 @@ int ehPonteiro(tab_t* tab, char* nome, char* escopo){
 
 	for(i=0; i < tab->nVar; i++){
 		if(strcmp(nome, tab->tab_var[i].nome) == 0 && strcmp(escopo, tab->tab_var[i].escopo) == 0){
-			if(tab->tab_var[i].endereco >= PTR0 && tab->tab_var[i].endereco <= PTR4)
+			if(tab->tab_var[i].endereco >= PTR0 && tab->tab_var[i].endereco <= PTR14)
 				return 1;
 			else
 				return 0;
@@ -369,7 +369,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 
 	for(i=0; i<nQuad; i++){
 		switch(tipoQuad(quad[i].campo[0])){
-			// (ASSIGN, $t, im, -)
+			// (ASSIGN, $t1, im, -)
 			// atribui imediato no temporario
 			case(ASSIGNq):
 				// carrega im no acumualdor
@@ -595,7 +595,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				strcpy(labelAux, ".2ndpositive");
 				strcat(labelAux, nOp);
 				insertLabel(tab, labelAux, label);
-				// armazena em $op1
+				// armazena em $op2
 				printf("STA $op2\n");
 				fprintf(assemb, "STA $op2\n"); nInst += 2;
 
@@ -747,7 +747,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				startParam = 0;
 				break;
 
-			// (GTE, $t3, $t1, $t2)
+			// (GT, $t3, $t1, $t2)
 			// $t3 = $t1 > $t2
 			case(GTq):
 				// carrega $t1 no acumulador
@@ -982,8 +982,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			// goto label
 			case(GOTOq):
 				// desvio para label
-				printf("J %s\n", quad[i].campo[1]);
-				fprintf(assemb, "J %s\n", quad[i].campo[1]); nInst += 2;
+				printf("J _%s\n", quad[i].campo[1]);
+				fprintf(assemb, "J _%s\n", quad[i].campo[1]); nInst += 2;
 				startParam = 0;
 				break;
 
@@ -1088,7 +1088,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 
 			// (PARAM, $t1, int, escopo) ou (PARAM, var, vet, escopo)
 			// empilha o conteudo de $t1 nos parametros ou
-			// empilha 0 se for vetor (passado por referencia)
+			// empilha o endereco se for vetor (passado por referencia)
 			// escopo eh de onde os parametros saem
 			case(PARAMq):
 				if(!startParam){

@@ -18,6 +18,16 @@
 #define PTR2 43677	// ponteiro 2
 #define PTR3 43678	// ponteiro 3
 #define PTR4 43679	// ponteiro 4
+#define PTR5 43680	// ponteiro 5
+#define PTR6 43681	// ponteiro 6
+#define PTR7 43682	// ponteiro 7
+#define PTR8 43683	// ponteiro 8
+#define PTR9 43684	// ponteiro 9
+#define PTR10 43685	// ponteiro 10
+#define PTR11 43686	// ponteiro 11
+#define PTR12 43687	// ponteiro 12
+#define PTR13 43688	// ponteiro 13
+#define PTR14 43689	// ponteiro 14
 
 #define STACK2start 21845
 #define STACKstart 43669

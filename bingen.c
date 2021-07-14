@@ -136,7 +136,10 @@ void endercamento(tab_t* tab, char* escopoAtual, char* com){
 		// imediato (10)
 		case('&'):
 			// ponteiro
+			// uso do denrecamento imediato
 			// obtencao do endereco do nome da variavel sem o '&'
+			printf("10000000000\n");
+			fprintf(binc, "10000000000\n");
 			im = enderecoVar(tab, escopoAtual, com + sizeof(char));
 			decToBin(im);
 			break;
