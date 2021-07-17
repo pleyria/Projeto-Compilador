@@ -1,0 +1,17 @@
+int fibonacci(int n){
+	int a; int b; int i;
+	a = 0;
+	b = 1;
+	i = 0;
+	while(i < n){
+		a = b;
+		b = a + b;
+	}
+	return a;
+}
+
+void main(void){
+	int x;
+	x = input();
+	output(fibonacci(x));
+}

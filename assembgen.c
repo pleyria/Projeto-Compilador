@@ -360,7 +360,7 @@ void carregaEstado(tab_t* tab, char* funcao, int tempv[]){
 
 void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 	int i, j, tam, count_op = 0;
-	int startParam = 0, call = 0;
+	int startParam = 0, call = 0, execReturn = 0;
 	int tempv[MAXTEMP];
 	char labelAux[MAXLAB], nOp[MAXLAB], funcat[MAXLAB];
 	char escopoAtual[MAXLAB];
@@ -1220,8 +1220,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// funcoes definidas pelo usuario
 				// empilha endereco de retorno
 				// carrega endereco de retorno no acumulador
-				printf("LDA %d\n", nInst+6);
-				fprintf(assemb, "LDA %d\n", nInst+6); nInst += 2;
+				printf("LDA %d\n", nInst+12);	// adiciona 12 pq eh o numero de instrucoes binarias ate o label
+				fprintf(assemb, "LDA %d\n", nInst+12); nInst += 2;
 				// armazena no topo da pilha 2
 				printf("STA [$stck2]\n");
 				fprintf(assemb, "STA [$stck2]\n"); nInst += 2;
@@ -1288,7 +1288,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				printf("J [$stck2]\n");
 				fprintf(assemb, "J [$stck2]\n"); nInst += 2; // enderecamento direto
 				
-				startParam=0;
+				execReturn = 1;
+				startParam = 0;
 				break;
 
 			// (END, func, -, -)
@@ -1296,7 +1297,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 			// essa parte eh executada so para funcoes void onde nao tem return
 			case(ENDq):
 				// nao precisa de desvio se for o fim da funcao main
-				if(strcmp(quad[i].campo[1], "main") != 0){
+				// nao precisa de desvio se ele ja tiver sido feito pela quadrupla return
+				if(strcmp(quad[i].campo[1], "main") != 0 && !execReturn){
 					// desempilha o endereco de retorno
 					// carrega ponteiro de pilha 2
 					printf("LDA $stck2\n");
@@ -1311,6 +1313,7 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					printf("J [$stck2]\n");
 					fprintf(assemb, "J [$stck2]\n"); nInst += 2; // enderecamento direto
 				}
+				execReturn = 0;
 				startParam = 0;
 				break;
 
@@ -1368,13 +1371,13 @@ tab_t* assembgen(void){
 	printf("Codigo Assembly:\n");
 	// inicializa ponteiros de pilha
 	printf("LDA %d\n", STACKstart);
-	fprintf(assemb, "LDA %d\n", STACKstart);
+	fprintf(assemb, "LDA %d\n", STACKstart); nInst += 2;
 	printf("STA $stck\n");
-	fprintf(assemb, "STA $stck\n");
+	fprintf(assemb, "STA $stck\n"); nInst += 2;
 	printf("LDA %d\n", STACK2start);
-	fprintf(assemb, "LDA %d\n", STACK2start);
+	fprintf(assemb, "LDA %d\n", STACK2start); nInst += 2;
 	printf("STA $stck2\n");
-	fprintf(assemb, "STA $stck2\n");
+	fprintf(assemb, "STA $stck2\n"); nInst += 2;
 	// comeca a execucao na funcao main
 	printf("J >main\n"); nInst += 2;
 	fprintf(assemb, "J >main\n");

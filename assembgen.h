@@ -29,8 +29,9 @@
 #define PTR13 43688	// ponteiro 13
 #define PTR14 43689	// ponteiro 14
 
-#define STACK2start 21845
-#define STACKstart 43669
+#define STACK2start 43669
+#define STACKstart 21845
+
 #define TEMPstart 43690
 #define VARstart 65535
 

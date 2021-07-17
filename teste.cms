@@ -1,7 +1,0 @@
-int funcao(int vet[]){}
-
-void main(void){
-	int vetor[10];
-	
-	funcao(vetor);
-}

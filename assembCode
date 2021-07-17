@@ -1,31 +1,93 @@
-LDA 43669
-STA $stck
 LDA 21845
+STA $stck
+LDA 43669
 STA $stck2
 J >main
->funcao
+>fibonacci
 LDA $stck
 SUB 1
 STA $stck
 LDA [$stck]
-STA $ptr0
+STA n
+LDA 0
+STA $t1
+LDA $t1
+STA a
+LDA 1
+STA $t2
+LDA $t2
+STA b
+LDA 0
+STA $t3
+LDA $t3
+STA i
+_L1
+LDA i
+STA $t4
+LDA n
+STA $t5
+LDA $t4
+SUB $t5
+JN .false0
+LDA 1
+J .true0
+.false0
+LDA 0
+.true0
+STA $t6
+LDA $t6
+SUB 1
+JZ L2
+LDA b
+STA $t7
+LDA $t7
+STA a
+LDA a
+STA $t8
+LDA b
+STA $t9
+LDA $t8
+ADD $t9
+STA $t10
+LDA $t10
+STA b
+J _L1
+_L2
+LDA a
+STA $t11
+LDA $t11
+STA $ret
 LDA $stck2
 ADD 1
 STA $stck2
 J [$stck2]
 >main
-LDA &vetor
+INPUT $t12
+LDA $t12
+STA x
+LDA x
+STA $t13
+LDA $t13
 STA [$stck]
 LDA $stck
 ADD 1
 STA $stck
-LDA 36
+LDA 148
 STA [$stck2]
 LDA $stck2
 SUB 1
 STA $stck2
-J >funcao
+J >fibonacci
 <call0
 LDA $ret
-STA $t1
+STA $t14
+LDA $t14
+STA [$stck]
+LDA $stck
+ADD 1
+STA $stck
+LDA $stck
+SUB 1
+STA $stck
+OUTPUT $t14
 HLT

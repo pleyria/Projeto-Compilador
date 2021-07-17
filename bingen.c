@@ -5,6 +5,9 @@
 #include "assembgen.h"
 #include "bingen.h"
 
+// variavel para imprimir os numeros das linhas no terminal
+int linha;
+
 /* arquivo para escrita do codigo binario */
 static FILE* binc;
 
@@ -29,9 +32,9 @@ tipo_inst_t tipoInst(char* com){
 		return JNi;
 	if(!strcmp(com, "JZ"))
 		return JZi;
-	if(!strcmp(com, "IN"))
+	if(!strcmp(com, "INPUT"))
 		return INi;
-	if(!strcmp(com, "OUT"))
+	if(!strcmp(com, "OUTPUT"))
 		return OUTi;
 	if(!strcmp(com, "SHR"))
 		return SHRi;
@@ -100,6 +103,10 @@ int enderecoLabel(tab_t* tab, char* lab){
 void decToBin(int dec){
 	int i, n;
 	int bin[TAMPALAVRA];
+
+	// impressao da linha no terminal
+	printf("%d:\t", linha);
+	linha++;
 
 	n = 0;
 	while(dec > 0){
@@ -249,11 +256,19 @@ void genBin(instrucao_t* inst, int nInst, tab_t* tab){
 	int label = 0;
 	char escopoAtual[MAXLAB];
 
+	linha = 0;
+
 	for(i=0; i<nInst; i++){
 		label = 0;
 
 		// impressao da instrucao assembly correspondente no terminal
-		printf("[%s %s]\n", inst[i].campo[0], inst[i].campo[1]);
+		printf("\t[%s %s]\n", inst[i].campo[0], inst[i].campo[1]);
+
+		// impressao do numero da linha no terminal
+		if(tipoInst(inst[i].campo[0]) != LABELi){
+			printf("%d:\t", linha);
+			linha++;
+		}
 
 		switch(tipoInst(inst[i].campo[0])){
 			// Store Accumulator
