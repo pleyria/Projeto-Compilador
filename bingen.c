@@ -176,12 +176,21 @@ void endercamento(tab_t* tab, char* escopoAtual, char* com){
 			com[strlen(com)-1] = '\0';
 			// especial
 			if(com[1] == '$'){
-				if(!strcmp(com + 2*sizeof(char), "stck")){
+				if(!strcmp(com + 2*sizeof(char), "stck")){ // pilha 1
 					decToBin(STCK);
 					break;
 				}
-				if(!strcmp(com + 2*sizeof(char), "stck2")){
+				if(!strcmp(com + 2*sizeof(char), "stck2")){ // pilha 2
 					decToBin(STCK2);
+					break;
+				}
+				else{
+					// obtem o numero do temporario
+					strcpy(temp, "");
+					strcat(temp, com + 3*sizeof(char));
+					im = atoi(temp);
+					// imprime o endereco do temporario
+					decToBin(TEMPstart + im - 1);
 					break;
 				}
 			}
@@ -226,6 +235,16 @@ void endercamento(tab_t* tab, char* escopoAtual, char* com){
 				decToBin(RET);
 				break;
 			}
+			// $ptr0 ... $ptr14
+			else{
+				// obtem o numero do ponteiro
+				strcpy(temp, "");
+				strcat(temp, com + 4*sizeof(char));
+				im = atoi(temp);
+				// imprime endereco do ponteiro
+				decToBin(PTR0 + im);
+				break;
+			}
 			break;
 
 		// labels
@@ -242,9 +261,9 @@ void endercamento(tab_t* tab, char* escopoAtual, char* com){
 			break;
 
 		default:
+			// variavel criada pelo usuario ou ponteiro (direto)
 			printf("00000000000\n");
 			fprintf(binc, "00000000000\n");
-			// variavel criada pelo usuario
 			im = enderecoVar(tab, escopoAtual, com);
 			decToBin(im);
 			break;
@@ -262,7 +281,7 @@ void genBin(instrucao_t* inst, int nInst, tab_t* tab){
 		label = 0;
 
 		// impressao da instrucao assembly correspondente no terminal
-		printf("\t[%s %s]\n", inst[i].campo[0], inst[i].campo[1]);
+		printf("\t%s %s\n", inst[i].campo[0], inst[i].campo[1]);
 
 		// impressao do numero da linha no terminal
 		if(tipoInst(inst[i].campo[0]) != LABELi){

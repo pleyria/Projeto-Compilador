@@ -1016,8 +1016,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					fprintf(assemb, "LDA %s\n", quad[i].campo[3]); nInst += 2;
 					// verifica se a variavel eh ponteiro
 					if(ehPonteiro(tab, quad[i].campo[2], escopoAtual)){
-						printf("ADD [%s]\n", quad[i].campo[2]);
-						fprintf(assemb, "ADD [%s]\n", quad[i].campo[2]); nInst += 2;
+						printf("ADD %s\n", quad[i].campo[2]);
+						fprintf(assemb, "ADD %s\n", quad[i].campo[2]); nInst += 2;
 					}
 					else{
 						// soma o endereco de var ao acumulador
@@ -1055,8 +1055,8 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 					// verifica se a variavel eh ponteiro
 					if(ehPonteiro(tab, quad[i].campo[1], escopoAtual)){
 						// soma o endereco apontado pelo ponteiro ao acumulador
-						printf("ADD [%s]\n", quad[i].campo[1]);
-						fprintf(assemb, "ADD [%s]\n", quad[i].campo[1]); nInst += 2;
+						printf("ADD %s\n", quad[i].campo[1]);
+						fprintf(assemb, "ADD %s\n", quad[i].campo[1]); nInst += 2;
 					}
 					else{
 						// soma o endereco de var ao acumulador
@@ -1137,8 +1137,6 @@ void genAsemb(quadrupla_t* quad, int nQuad, tab_t* tab){
 				// adiciona variavel no escopo da funcao se nao existir
 				// ja pode ter sido alocada no caso de uma chamada recursiva
 				if(!procuraVar(tab, quad[i].campo[1], quad[i].campo[2])){
-					// se for vetor insere com tamanho zero na tabela
-					// tamanho zero significa que eh um ponteiro
 					if(!strcmp(quad[i].campo[3], "vet")){ // vetor
 						insertVar(tab, quad[i].campo[1], quad[i].campo[2], 1, PTR0 + ptr);
 						ptr++;
