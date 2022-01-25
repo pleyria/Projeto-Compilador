@@ -252,9 +252,9 @@ void endercamento(tab_t* tab, char* escopoAtual, char* com){
 		case('_'):
 		case('>'):
 		case('<'):
-			// para labels obtidas da tabela, o enderecamento eh imediato
-			printf("01000000000\n");
-			fprintf(binc, "01000000000\n");
+			// para labels obtidas da tabela, o enderecamento eh direto
+			printf("00000000000\n");
+			fprintf(binc, "00000000000\n");
 			// pega o endereco indicado pela label
 			im = enderecoLabel(tab, com);
 			decToBin(im);
